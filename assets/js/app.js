@@ -16,6 +16,9 @@ $(document).ready(function () {
             url: "https://wordsapiv1.p.mashape.com/words/" + searchTerm,
             headers: {
                 "X-Mashape-Key": apiKey
+            },
+            xhrFields: {
+                withCredentials: true
             }
         }).then(function (response) {
             console.log(response);
