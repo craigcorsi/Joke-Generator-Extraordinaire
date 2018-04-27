@@ -14,6 +14,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: "https://wordsapiv1.p.mashape.com/words/" + searchTerm,
+            crossDomain: true,
             headers: {
                 "X-Mashape-Key": apiKey
             },
