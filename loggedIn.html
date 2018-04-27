@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>LoggedIn</title>
+</head>
+
+<!-- Below is the initialization snippet for my Firebase project. It will vary for each project-->
+<script src="https://cdn.firebase.com/libs/firebaseui/3.6.4/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+  apiKey: "AIzaSyASRuqWmMZXjY-vsWis0rAz3Li_zG2erac",
+  authDomain: "mypro1-a5ac8.firebaseapp.com",
+  databaseURL: "https://mypro1-a5ac8.firebaseio.com",
+  projectId: "mypro1-a5ac8",
+  storageBucket: "mypro1-a5ac8.appspot.com",
+  messagingSenderId: "990386012661"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<body>
+<!-- A simple script to add text to the page that displays the user's Display Name and Email -->
+<script>
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      document.body.innerHTML = '<h1>Congrats ' + user.displayName + 
+        ', you are done!</h1><h2>Now get back to what you love building.</h2><h2>' +
+          'Need to verify your email address or reset your password?' + 
+          'Firebase can handle all of that for you using the email you provided: ' + 
+          user.email + '</h2>';
+    }
+    else {
+      console.log("no user signed in");
+    }      
+  });
+</script>
+
+<h1>Congratulations you're done! Now get back to what you love building.</h1>
+</body>
+</html>
