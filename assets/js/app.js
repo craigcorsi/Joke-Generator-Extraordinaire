@@ -4,6 +4,9 @@ var searchTerm;
 
 var wordAttributes = ['also', 'attribute', 'entails', 'examples', 'hasSubstances', 'hasCategories', 'inCategory', 'partOf', 'pertainsTo', 'similarTo', 'substanceOf', 'synonyms', 'typeOf'];
 
+var currentWords;
+var currentLists;
+
 //
 //
 //      FUNCTIONS
@@ -38,39 +41,42 @@ function shuffle(array) {
 //          has inputted, prompting the user to choose the correct definition(s)
 //
 
-function confirmDefinition(list) {
+function confirmDefinition() {
 
     $('#search-results-here').html('');
 
+    // create new div containing all possible definitions.
     var optionAsk = $('<div>').attr('class', 'option-ask').css({
         'border': '1px solid black',
         'border-radius': '10px',
         'padding': '5px 10px',
         'margin': '20px'
     });
-    // create new div containing all possible definitions.
-    for (var i = 0; i < list.length; i++) {
 
-        // create div with border enclosing the definition
-        var defDiv = $('<div>').attr({
-            'class': 'defChoice',
-            'data-index': i,
-            'data-selected': false
-        }).css({
-            'border': '1px solid black',
-            'border-radius': '5px',
-            'padding': '5px 10px',
-            'margin': '20px'
-        }).html(list[i].definition);
-        optionAsk.prepend(defDiv);
+    for (var w = 0; w < currentWords.length; w++) {
+        for (var i = 0; i < currentLists[w].length; i++) {
+
+            // create div with border enclosing the definition
+            var defDiv = $('<div>').attr({
+                'class': 'defChoice',
+                'collection-index': w,
+                'data-index': i,
+                'data-selected': false
+            }).css({
+                'border': '1px solid black',
+                'border-radius': '5px',
+                'padding': '5px 10px',
+                'margin': '20px'
+            }).html(currentLists[w][i].definition);
+            optionAsk.prepend(defDiv);
+        }
     }
     optionAsk.prepend("<p>Which definition(s) did you have in mind?</p>" +
         "<button class='definitionsSubmit'>Submit definitions</button>");
 
     $('#search-results-here').append(optionAsk);
 
-
-    // when the user hovers over a definition, it becomes visibly clickable
+        // when the user hovers over a definition, it becomes visibly clickable
     // This is hard-coded as it relies on the definitions being in a div within a div within #
     $('#search-results-here div div').hover(function () {
         $(this).css({
@@ -84,50 +90,6 @@ function confirmDefinition(list) {
         });
     });
 
-    // when the user clicks on a definition, it becomes active 
-    // This is hard-coded as it relies on the definitions being in a div within a div within #
-    $('#search-results-here div div').click(function () {
-        switch ($(this).attr('data-selected')) {
-            case "true":
-                $(this).css({
-                    "border": "1px solid black"
-                });
-                $(this).attr('data-selected', false);
-                break;
-            case "false":
-                $(this).css({
-                    "border": "3px solid black"
-                });
-                $(this).attr('data-selected', true);
-                break;
-            default:
-                console.log("?");
-        }
-    });
-
-    // when the user clicks the 'submit' button, more details are provided for the selected definitions
-    $('body').on('click', '.definitionsSubmit', function () {
-        event.preventDefault();
-
-        var terms = [];
-
-        $(this).parent().children('div').each(function () {
-            if ($(this).attr('data-selected') == "true") {
-                terms.push(list[$(this).attr('data-index')]);
-            }
-        });
-
-
-        // create collection of cells of related words
-        var relatedWordsList = createRelatedWordsList(terms);
-        relatedWordsList = shuffle(relatedWordsList);
-        var cellList = divideWordsIntoCells(relatedWordsList);
-        buildCells(cellList);
-
-
-        // we are done picking definitions, so this menu can be removed
-        $(this).parent().remove();
-    });
 
 }
 
@@ -150,7 +112,6 @@ function createRelatedWordsList(terms) {
             }
         }
     }
-    console.log(theList);
     return theList;
 }
 
@@ -208,12 +169,12 @@ function buildCells(cellList) {
     }
     $('#search-results-here').append(cellContainer);
 
-    $('body').on('click', '.no-button', function() {
+    $('body').on('click', '.no-button', function () {
         event.preventDefault();
         $(this).parent().remove();
     });
 
-    $('body').on('click', '.yes-button', function() {
+    $('body').on('click', '.yes-button', function () {
         event.preventDefault();
         var blurb = $(this).parent().find('.words-in-cell')[0].innerText;
         console.log(blurb);
@@ -311,8 +272,57 @@ $(document).ready(function () {
         }).then(function (response) {
             // present the word's definitions for the user to specify
             var selection = response.results;
-            var term = confirmDefinition(selection);
+            currentWords = [searchTerm];
+            currentLists = [selection];
+            var term = confirmDefinition();
         });
+    });
+
+    // when the user clicks on a definition, it becomes active 
+    // This is hard-coded as it relies on the definitions being in a div within a div within #
+    $('body').on('click', '#search-results-here div div', function () {
+        switch ($(this).attr('data-selected')) {
+            case "true":
+                $(this).css({
+                    "border": "1px solid black"
+                });
+                $(this).attr('data-selected', false);
+                break;
+            case "false":
+                $(this).css({
+                    "border": "3px solid black"
+                });
+                $(this).attr('data-selected', true);
+                break;
+            default:
+                console.log("?");
+        }
+    });
+
+
+    // when the user clicks the 'submit' button, more details are provided for the selected definitions
+    $('body').on('click', '.definitionsSubmit', function () {
+        event.preventDefault();
+
+        var terms = [];
+
+        console.log(currentWords, currentLists);
+
+        $(this).parent().children('div').each(function () {
+            if ($(this).attr('data-selected') == "true") {
+                var w = $(this).attr('collection-index');
+                terms.push(currentLists[w][$(this).attr('data-index')]);
+            }
+        });
+
+        // create collection of cells of related words
+        var relatedWordsList = createRelatedWordsList(terms);
+        relatedWordsList = shuffle(relatedWordsList);
+        var cellList = divideWordsIntoCells(relatedWordsList);
+        buildCells(cellList);
+
+        // we are done picking definitions, so this menu can be removed
+        $(this).parent().remove();
     });
 });
 
