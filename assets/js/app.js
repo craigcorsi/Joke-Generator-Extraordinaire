@@ -76,7 +76,7 @@ function confirmDefinition() {
 
     $('#search-results-here').append(optionAsk);
 
-        // when the user hovers over a definition, it becomes visibly clickable
+    // when the user hovers over a definition, it becomes visibly clickable
     // This is hard-coded as it relies on the definitions being in a div within a div within #
     $('#search-results-here div div').hover(function () {
         $(this).css({
@@ -168,17 +168,6 @@ function buildCells(cellList) {
         cellContainer.append(cell);
     }
     $('#search-results-here').append(cellContainer);
-
-    $('body').on('click', '.no-button', function () {
-        event.preventDefault();
-        $(this).parent().remove();
-    });
-
-    $('body').on('click', '.yes-button', function () {
-        event.preventDefault();
-        var blurb = $(this).parent().find('.words-in-cell')[0].innerText;
-        console.log(blurb);
-    });
 }
 
 
@@ -324,9 +313,31 @@ $(document).ready(function () {
         // we are done picking definitions, so this menu can be removed
         $(this).parent().remove();
     });
+
+    $('body').on('click', '.no-button', function () {
+        event.preventDefault();
+
+    
+        if ($(this).parent().parent().children().length <= 1) {
+            $(this).parent().parent().remove();
+        } else {
+            $(this).parent().remove();
+        }
+        
+
+    });
+
+    $('body').on('click', '.yes-button', function () {
+        event.preventDefault();
+        var blurb = $(this).parent().find('.words-in-cell')[0].innerText;
+        console.log(blurb);
+    });
 });
 
 /*
+
+FIXES since last push:
+-cell container is removed when the last cell is removed
 
 Future goals:
 
@@ -337,4 +348,5 @@ search a phrase word by word
 parse a phrase for important words and search those
 
 */
+
 
