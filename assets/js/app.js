@@ -256,11 +256,13 @@ $(document).ready(function () {
         event.preventDefault();
 
         $("#input-search-terms-here").hide();
-
+     
         searchTerms = $('#first-search-term').val().trim().split(' ');
         // filter out stop words
         searchTerms = searchTerms.filter(checkStopWord);
         var definitionLists = [];
+      
+        Cib.saveTopic();
 
         for (var i = 0; i < searchTerms.length; i++) {
             $.ajax({
@@ -294,7 +296,6 @@ $(document).ready(function () {
                 }
             });
         }
-
     });
 
     // when the user clicks on a definition, it becomes active 
@@ -333,6 +334,8 @@ $(document).ready(function () {
             }
         });
 
+        Cib.saveDefinition();
+        
         // create collection of cells of related words
         var relatedWordsList = createRelatedWordsList(terms);
         relatedWordsList = shuffle(relatedWordsList);
