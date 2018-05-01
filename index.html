@@ -22,124 +22,179 @@
         </nav>
         <a class="btn btn-outline-primary" href="#">About</a>
     </div>
-    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-        <h1 class="display-4">Joke Generator Extraordinaire</h1>
-        <p class="lead">Use this app to spark your creativity</p>
-    </div>
-    <!-------------------------------->
-    <div class="container center_div col-md-8 order-md-1 text-center">
-        <h4 class="mb-3">User Input</h4>
-        <form class="needs-validation" novalidate>
-            <div class="row">
-                <div class="container center_div col-md-6 mb-3">
-                    <label for="firstName">Type the word you want to tell jokes about</label>
-                    <input type="text" class="form-control" id="first-search-term" placeholder="" value="" required>
-                    <div class="invalid-feedback">
-                        Validation msg.
+    <div class="row">
+        <!-- side panel for search history -->
+        <div class="col col-md-3 bg-dark">
+            <form class="form-inline mt-3 mb-3" id="usernameForm">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">name</span>
                     </div>
-                    <br>
-                    <button class="btn btn-primary" type="submit" id="button-submit-term">Submit!</button>
+                    <input type="text" class="form-control" id="username" placeholder="enter for view/track" aria-label="view search history" aria-describedby="basic-addon1">
+                </div>
+                <button type="submit" class="btn btn-primary mt-2" id='usernameSubmit'>Previous search</button>
+            </form>
+            <h6 class="mb-1 ml-2 text-white">Topics Searched</h6>
+            
+            <div class="list-group" id="topic-list">
+                <!-- <div class="list-group-item list-group-item-action flex-column align-items-start active">
+                    <div class="d-flex w-100 justify-content-left">
+                        <h6 class="mb-1" id="topic-name">List group item heading</h6>
+                        <small id="topic-time-searched">3 days ago</small>
+                    </div>
+                    <p class="mb-1" id="topic-detail">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                    <small>Find out</small>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#def-final">
+                        Final definition
+                    </button>
+                </div> -->
+            </div>
+            <!-- modal-->
+            <div class="modal fade" id="def-final" tabindex="-1" role="dialog" aria-labelledby="defFinaleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="topic-title">Topic name</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="definition-list"><ul>
+                            <li>li 1</li>
+                            </ul>  
+                        </div>
+                        <div class="modal-body" id="final-definition-list">
+                                Topic final definitions
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div id="search-results-here">
+        </div>
 
-                </div>
+        <!-- main serch area -->
+        <div class="col col-md-9">
+            <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+                <h1 class="display-4">Joke Generator Extraordinaire</h1>
+                <p class="lead">Use this app to spark your creativity</p>
             </div>
-    </div>
-    </form>
-    </div>
+            <!-------------------------------->
+            <div class="container center_div col-md-8 order-md-1 text-center">
+                <h4 class="mb-3">User Input</h4>
+                <form class="needs-validation" id="topic-form" novalidate>
+                    <div class="row">
+                        <div class="container center_div col-md-6 mb-3">
+                            <label for="firstName">Type the word you want to tell jokes about</label>
+                            <input type="text" class="form-control" id="first-search-term" placeholder="" value="" required>
+                            <div class="invalid-feedback">
+                                Validation msg.
+                            </div>
+                            <br>
+                            <button class="btn btn-primary" type="submit" id="button-submit-term">Submit!</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="search-results-here">
+                        </div>
+                    </div>
+                </form>
+            </div>
 
-    <footer class="page-footer font-small stylish-color-dark pt-4 mt-4">
 
-        <!--Footer Links-->
-        <div class="container">
-            <div class="row">
+            <footer class="page-footer font-small stylish-color-dark pt-4 mt-4">
 
-                <hr class="clearfix w-100 d-md-none">
+                <!--Footer Links-->
+                <div class="container">
+                    <div class="row">
 
-                <!--First column-->
-                <div class="col-md-4 mx-auto">
-                    <h5 class="text-uppercase mb-4 mt-3 font-weight-bold">Resource Links</h5>
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="http://api.funtranslations.com">Fun Translator APIs</a>
+                        <hr class="clearfix w-100 d-md-none">
+
+                        <!--First column-->
+                        <div class="col-md-4 mx-auto">
+                            <h5 class="text-uppercase mb-4 mt-3 font-weight-bold">Resource Links</h5>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a href="http://api.funtranslations.com">Fun Translator APIs</a>
+                                </li>
+                                <li>
+                                    <a href="https://developers.giphy.com/">Gifs from Giphy API</a>
+                                </li>
+                                <li>
+                                    <a href="http://rumandmonkey.com/widgets/toys/namegen#.WuSp2IjwZPY">Silly Name Generators</a>
+                                </li>
+                                <li>
+                                    <a href="http://developers.slapbot.com/">Jokes from Slapbot</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--/.First column-->
+
+                        <hr class="clearfix w-100 d-md-none">
+
+                        <!--Second column-->
+                        <div class="col-md-2 mx-auto">
+                            <h5 class="text-uppercase mb-4 mt-3 font-weight-bold">About</h5>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a href="https://www.wordsapi.com/">Words API</a>
+                                </li>
+                                <li>
+                                    <a href="https://firebase.google.com/docs/">Firebase</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Dev Team</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--/.Second column-->
+                    </div>
+                </div>
+
+                <!--Social buttons-->
+                <div class="text-center">
+                    <ul class="list-unstyled list-inline">
+                        <li class="list-inline-item">
+                            <a href="https://www.facebook.com/" class="btn-floating btn-sm btn-fb mx-1">
+                                <i class="fa fa-facebook"> </i>
+                            </a>
                         </li>
-                        <li>
-                            <a href="https://developers.giphy.com/">Gifs from Giphy API</a>
+                        <li class="list-inline-item">
+                            <a href="https://twitter.com/?lang=en" class="btn-floating btn-sm btn-tw mx-1">
+                                <i class="fa fa-twitter"> </i>
+                            </a>
                         </li>
-                        <li>
-                            <a href="http://rumandmonkey.com/widgets/toys/namegen#.WuSp2IjwZPY">Silly Name Generators</a>
+                        <li class="list-inline-item">
+                            <a href="https://plus.google.com/discover" class="btn-floating btn-sm btn-gplus mx-1">
+                                <i class="fa fa-google-plus"> </i>
+                            </a>
                         </li>
-                        <li>
-                            <a href="http://developers.slapbot.com/">Jokes from Slapbot</a>
+                        <li class="list-inline-item">
+                            <a href="https://www.linkedin.com/" class="btn-floating btn-sm btn-li mx-1">
+                                <i class="fa fa-linkedin"> </i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://dribbble.com/" class="btn-floating btn-sm btn-dribbble mx-1">
+                                <i class="fa fa-dribbble"> </i>
+                            </a>
                         </li>
                     </ul>
                 </div>
-                <!--/.First column-->
+                <!--/.Social buttons-->
 
-                <hr class="clearfix w-100 d-md-none">
-
-                <!--Second column-->
-                <div class="col-md-2 mx-auto">
-                    <h5 class="text-uppercase mb-4 mt-3 font-weight-bold">About</h5>
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="https://www.wordsapi.com/">Words API</a>
-                        </li>
-                        <li>
-                            <a href="https://firebase.google.com/docs/">Firebase</a>
-                        </li>
-                        <li>
-                            <a href="#!">Dev Team</a>
-                        </li>
-                    </ul>
+                <!--Copyright-->
+                <div class="footer-copyright py-3 text-center">
+                    © 2018 Copyright:
+                    <a href="https://mdbootstrap.com/material-design-for-bootstrap/"> MDBootstrap.com </a>
                 </div>
-                <!--/.Second column-->
-            </div>
-        </div>
+                <!--/.Copyright-->
 
-        <!--Social buttons-->
-        <div class="text-center">
-            <ul class="list-unstyled list-inline">
-                <li class="list-inline-item">
-                    <a href="https://www.facebook.com/" class="btn-floating btn-sm btn-fb mx-1">
-                        <i class="fa fa-facebook"> </i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="https://twitter.com/?lang=en" class="btn-floating btn-sm btn-tw mx-1">
-                        <i class="fa fa-twitter"> </i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="https://plus.google.com/discover" class="btn-floating btn-sm btn-gplus mx-1">
-                        <i class="fa fa-google-plus"> </i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="https://www.linkedin.com/" class="btn-floating btn-sm btn-li mx-1">
-                        <i class="fa fa-linkedin"> </i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="https://dribbble.com/" class="btn-floating btn-sm btn-dribbble mx-1">
-                        <i class="fa fa-dribbble"> </i>
-                    </a>
-                </li>
-            </ul>
+            </footer>
         </div>
-        <!--/.Social buttons-->
-
-        <!--Copyright-->
-        <div class="footer-copyright py-3 text-center">
-            © 2018 Copyright:
-            <a href="https://mdbootstrap.com/material-design-for-bootstrap/"> MDBootstrap.com </a>
-        </div>
-        <!--/.Copyright-->
-
-    </footer>
-    <!--/.Footer-->
+        <!--/.Footer-->
     </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -154,7 +209,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
     </script>
+    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+    <script src="assets/js/words.js"></script>
     <script src="assets/js/app.js"></script>
+    
 </body>
 
 </html>
