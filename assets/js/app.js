@@ -259,6 +259,8 @@ $(document).ready(function () {
         event.preventDefault();
         searchTerm = $('#first-search-term').val().trim();
 
+        Cib.saveTopic();
+
         $.ajax({
             url: "https://wordsapiv1.p.mashape.com/words/" + searchTerm,
             crossDomain: true,
@@ -315,6 +317,8 @@ $(document).ready(function () {
             }
         });
 
+        Cib.saveDefinition();
+        
         // create collection of cells of related words
         var relatedWordsList = createRelatedWordsList(terms);
         relatedWordsList = shuffle(relatedWordsList);
