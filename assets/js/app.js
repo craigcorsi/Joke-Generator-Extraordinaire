@@ -4,6 +4,13 @@ var searchTerm;
 
 var wordAttributes = ['also', 'attribute', 'entails', 'examples', 'hasSubstances', 'hasCategories', 'inCategory', 'partOf', 'pertainsTo', 'similarTo', 'substanceOf', 'synonyms', 'typeOf'];
 
+// list of unimportant words to filter out
+var stopWords = ["the", "a", "about", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "along", "already", "also","although","always","am","among", "amongst", "amoungst", "amount",  "an", "and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", "are", "around", "as",  "at", "back","be","became", "because","become","becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "both", "bottom","but", "by", "call", "can", "cannot", "cant", "co", "con", "could", "couldnt", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven","else", "elsewhere", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "him", "himself", "his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "itself", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "myself", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own","part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thick", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves"];
+
+function checkStopWord (word) {
+    return stopWords.indexOf(word) == -1;
+}
+
 var currentWords;
 var currentLists;
 
@@ -53,6 +60,7 @@ function confirmDefinition() {
         'margin': '20px'
     });
 
+
     for (var w = 0; w < currentWords.length; w++) {
         for (var i = 0; i < currentLists[w].length; i++) {
 
@@ -67,8 +75,8 @@ function confirmDefinition() {
                 'border-radius': '5px',
                 'padding': '5px 10px',
                 'margin': '20px'
-            }).html(currentLists[w][i].definition);
-            optionAsk.prepend(defDiv);
+            }).html(currentWords[w] + ": " + currentLists[w][i].definition);
+            optionAsk.append(defDiv);
         }
     }
     optionAsk.prepend("<p>Which definition(s) did you have in mind?</p>" +
@@ -246,25 +254,47 @@ $(document).ready(function () {
     $('#button-submit-term').on('click', function () {
 
         event.preventDefault();
-        searchTerm = $('#first-search-term').val().trim();
 
-        $.ajax({
-            url: "https://wordsapiv1.p.mashape.com/words/" + searchTerm,
-            crossDomain: true,
-            headers: {
-                "X-Mashape-Key": apiKey,
-            },
-            crossDomain: true,
-            xhrFields: {
-                withCredentials: true
-            }
-        }).then(function (response) {
-            // present the word's definitions for the user to specify
-            var selection = response.results;
-            currentWords = [searchTerm];
-            currentLists = [selection];
-            var term = confirmDefinition();
-        });
+        $("#input-search-terms-here").hide();
+
+        searchTerms = $('#first-search-term').val().trim().split(' ');
+        // filter out stop words
+        searchTerms = searchTerms.filter(checkStopWord);
+        var definitionLists = [];
+
+        for (var i = 0; i < searchTerms.length; i++) {
+            $.ajax({
+                url: "https://wordsapiv1.p.mashape.com/words/" + searchTerms[i],
+                async: false,
+                crossDomain: true,
+                headers: {
+                    "X-Mashape-Key": apiKey,
+                },
+                crossDomain: true,
+                xhrFields: {
+                    withCredentials: true
+                }
+            }).then(function (response) {
+                // get and store the word's 'definitions' array
+                console.log("Response: " + response);
+                definitionLists = definitionLists.concat([response.results]);
+                if (definitionLists.length == searchTerms.length) {
+                    currentWords = searchTerms;
+                    currentLists = definitionLists;
+                    console.log('finished collecting definitions');
+                    confirmDefinition();
+                }
+            }, function(error) {
+                console.log("Error: " + error);
+                if (definitionLists.length == searchTerms.length) {
+                    currentWords = searchTerms;
+                    currentLists = definitionLists;
+                    console.log('finished collecting definitions');
+                    confirmDefinition();
+                }
+            });
+        }
+
     });
 
     // when the user clicks on a definition, it becomes active 
@@ -288,14 +318,13 @@ $(document).ready(function () {
         }
     });
 
-
     // when the user clicks the 'submit' button, more details are provided for the selected definitions
     $('body').on('click', '.definitionsSubmit', function () {
         event.preventDefault();
 
-        var terms = [];
+        $("#input-search-terms-here").show();
 
-        console.log(currentWords, currentLists);
+        var terms = [];
 
         $(this).parent().children('div').each(function () {
             if ($(this).attr('data-selected') == "true") {
@@ -317,13 +346,11 @@ $(document).ready(function () {
     $('body').on('click', '.no-button', function () {
         event.preventDefault();
 
-    
         if ($(this).parent().parent().children().length <= 1) {
             $(this).parent().parent().remove();
         } else {
             $(this).parent().remove();
         }
-        
 
     });
 
@@ -338,15 +365,18 @@ $(document).ready(function () {
 
 FIXES since last push:
 -cell container is removed when the last cell is removed
+-splits a phrase into multiple words and searches each word
+-filters out unimportant words
 
 Future goals:
 
-Add text to saved blurbs when click yes-button
+-Add text to saved blurbs when click yes-button (with Grace)
 
-add the word to the definition display
-search a phrase word by word
-parse a phrase for important words and search those
+-create a list of variable names for Stacey and Grace
+
+-Handle words that are not in the dictionary
+-more words to jumble in?
+
 
 */
-
 
