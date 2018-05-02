@@ -86,7 +86,8 @@
       timeSearched = 'not known';
     }
     else {
-      timeSearched = moment.unix(val.searchedTime).format("YYYY-MM-DD hh:mm A"); 
+      console.log(val.searchedTime);
+      timeSearched = moment.unix(val.searchedTime/1000).format("LLL"); 
     }
       
     var card = `<div class="list-group-item list-group-item-action flex-column mb-1 align-items-start active">
@@ -95,25 +96,27 @@
                     <small class="align-right" id="topic-time-searched">${timeSearched}</small>
                 </div>
                 <small>View </small>
-                <button type="button" class="btn btn-primary" id="modal-btn" data-toggle="modal" data-target="#def-final">
+                <button type="button" class="btn btn-primary modal-btn" data-toggle="modal" data-target=".def-final">
                     Final definition
                 </button>
                 </div>`;
     return card;
   }
 
+
+  //https://codepen.io/jkrehm/pen/OybdrW ****************************************
   Cib.prototype.createDefinitionListItem = function(val) {
     var topic, definitions, definitionListItem;
     topic = val.hasOwnProperty('topic') ? val.topic : 'Not known';
     definitions = val.hasOwnProperty('definitions') ? Array.from(val.definitions[0]) : 'Not known';
     
-    $(document).find('#topic-title').text(topic);
+    $(document).find('.topic-title').text(topic);
 
-    $(document).find('#definition-list > ul').empty();
+    $(document).find('.definition-list > ul').empty();
     definitions.forEach(function(definition) {
       definitionListItem = '';
       definitionListItem = `<li>${definition}</li>`;
-      $(document).find('#definition-list > ul').append(definitionListItem);
+      $(document).find('.definition-list > ul').append(definitionListItem);
     })
     
   }
@@ -158,13 +161,6 @@
     }
   }
 
-  // load modal content on click the button "#modal-brn"
-  $('#modal-btn').on('click', function() {
-    $('#definition-list').load('load definitions string', function() {
-      $('#def-final').modal({show:true});
-    });
-  });
-
   Cib.prototype.loadDefinitions = function() {
     var setDefinitions = function(data) {
       var val = data.val();
@@ -175,13 +171,32 @@
     this.definitionsRef.limitToLast(3).on('child_added', setDefinitions);
   }
 
+
+  // load modal content on click the button "#modal-brn"
+  $(document).on('click', '.modal-btn', function() {
+    // $(document).load(this.loadDefinitions, '.definition-list', function() {
+    //   $(document).find('.def-final').modal({show:true});
+    // });
+
+    // $('.definition-list').load(this.loadDefinitions, function() {
+    //   $('.def-final').modal({show:true});
+    // });
+    console.log("are inside");
+    $(".definition-list > ul").append("some test");
+
+    Cib.loadDefinitions();
+  });
+
+  
+
+  
   Cib.prototype.displayDefinition = function(key, val) {
    
     this.createDefinitionListItem(val);
     // console.log(key, val.topic, val.searchedTime);
     // var topicName = val.topic;
      //document.querySelector('#topic-list').append(this.Topic_TEMPLATE);
-    //$(document).find('#topic-list').append(this.createDefinitionListItem(val));
+    $(document).find('.definition-list > ul').append(this.createDefinitionListItem(val));
   }
 
   Cib.prototype.saveDefinition = function() {
