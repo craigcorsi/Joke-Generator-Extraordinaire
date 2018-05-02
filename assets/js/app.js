@@ -1,5 +1,5 @@
-var apiKey = '0reA09JpgnmshGI6Z2Sxl6usmjoWp1aEIV4jsn1ImdkLbThVb6';
-var testingKey = 'qINz8NnrVPmshq9TFlEf8RsC0frhp1CIQeRjsnY5jW3G47kS7P';
+var wordsApiKey = '0reA09JpgnmshGI6Z2Sxl6usmjoWp1aEIV4jsn1ImdkLbThVb6';
+var associationsApiKey = 'GyoDeRAZNBCMnmRq66QcsjebGxB6urkrIJet8PNk9eLYA+/tt0y27DPlLWTajxBGjSFm/kYCosEu36X4Sx08fg==';
 var searchTerm;
 
 var wordAttributes = ['also', 'attribute', 'entails', 'examples', 'hasSubstances', 'hasCategories', 'inCategory', 'partOf', 'pertainsTo', 'similarTo', 'substanceOf', 'synonyms', 'typeOf'];
@@ -57,7 +57,8 @@ function confirmDefinition() {
         'border': '1px solid black',
         'border-radius': '10px',
         'padding': '5px 10px',
-        'margin': '20px'
+        'margin': '20px',
+        "background-color": '#99aabb'
     });
 
 
@@ -74,7 +75,8 @@ function confirmDefinition() {
                 'border': '1px solid black',
                 'border-radius': '5px',
                 'padding': '5px 10px',
-                'margin': '20px'
+                'margin': '20px',
+                "background-color": 'white'
             }).html(currentWords[w] + ": " + currentLists[w][i].definition);
             optionAsk.append(defDiv);
         }
@@ -275,7 +277,7 @@ $(document).ready(function () {
                 async: false,
                 crossDomain: true,
                 headers: {
-                    "X-Mashape-Key": apiKey,
+                    "X-Mashape-Key": wordsApiKey,
                 },
                 crossDomain: true,
                 xhrFields: {
@@ -388,3 +390,17 @@ Future goals:
 
 */
 
+$.ajax({
+    url: "https://api.twinword.com/api/v4/word/associations/sound",
+    crossDomain: true,
+    headers: {
+        "X-Mashape-Key": wordsApiKey,
+    },
+    xhrFields: {
+        withCredentials: true
+    }
+}).then(function (response) {
+    console.log(response);
+}, function(error) {
+    console.log(error);
+});
