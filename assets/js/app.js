@@ -260,11 +260,16 @@ $(document).ready(function () {
         searchTerms = $('#first-search-term').val().trim().split(' ');
         // filter out stop words
         searchTerms = searchTerms.filter(checkStopWord);
+
+        // this will be the list of words that return a definition
+        var validWords = [];
+        // this is an array of each valid word's list of definitions
         var definitionLists = [];
       
         Cib.saveTopic();
 
         for (var i = 0; i < searchTerms.length; i++) {
+            var j = 0;
             $.ajax({
                 url: "https://wordsapiv1.p.mashape.com/words/" + searchTerms[i],
                 async: false,
@@ -279,17 +284,21 @@ $(document).ready(function () {
             }).then(function (response) {
                 // get and store the word's 'definitions' array
                 console.log("Response: " + response);
+                validWords.push(searchTerms[j]);
                 definitionLists = definitionLists.concat([response.results]);
-                if (definitionLists.length == searchTerms.length) {
-                    currentWords = searchTerms;
+                j++;
+                if (j == searchTerms.length) {
+                    currentWords = validWords;
                     currentLists = definitionLists;
                     console.log('finished collecting definitions');
                     confirmDefinition();
                 }
+                console.log(validWords);
             }, function(error) {
                 console.log("Error: " + error);
-                if (definitionLists.length == searchTerms.length) {
-                    currentWords = searchTerms;
+                j++;
+                if (j == searchTerms.length) {
+                    currentWords = validWords;
                     currentLists = definitionLists;
                     console.log('finished collecting definitions');
                     confirmDefinition();
@@ -360,6 +369,8 @@ $(document).ready(function () {
     $('body').on('click', '.yes-button', function () {
         event.preventDefault();
         var blurb = $(this).parent().find('.words-in-cell')[0].innerText;
+
+        // here: save blurb to the database
         console.log(blurb);
     });
 });
@@ -367,19 +378,13 @@ $(document).ready(function () {
 /*
 
 FIXES since last push:
--cell container is removed when the last cell is removed
--splits a phrase into multiple words and searches each word
--filters out unimportant words
+-Successfully ignores words not in the dictionary
 
 Future goals:
 
 -Add text to saved blurbs when click yes-button (with Grace)
 
 -create a list of variable names for Stacey and Grace
-
--Handle words that are not in the dictionary
--more words to jumble in?
-
 
 */
 
