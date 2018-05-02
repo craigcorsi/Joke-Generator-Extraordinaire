@@ -153,7 +153,8 @@ function buildCells(cellList) {
         'border': '1px solid black',
         'border-radius': '5px',
         'padding': '15px',
-        'margin': '10px'
+        'margin': '10px',
+        "background-color": '#99aabb'
     });
     for (var c = 0; c < cellList.length; c++) {
         var cell = $('<div>').attr({
@@ -162,7 +163,8 @@ function buildCells(cellList) {
             'border': '1px solid black',
             'border-radius': '5px',
             'padding': '5px 10px',
-            'margin': '20px'
+            'margin': '20px',
+            "background-color": 'white'
         }).html('How about THIS?<p class="words-in-cell">');
         var words = cellList[c];
         for (var a = 0; a < words.length; a++) {
