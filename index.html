@@ -17,33 +17,50 @@
 <body>
     <div id="humorHeader" class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom box-shadow">
         <img src="assets/images/stagewithmic.jpg">
-       <h3 class="my-0 mr-md-auto font-weight-normal">Humor is serious business</h3>
-<!--        <nav class="my-2 my-md-0 mr-md-3">
-            <a class="btn btn-outline-primary" href="#">Resources</a>
+        <h3 class="my-0 mr-md-auto font-weight-normal">Humor is serious business</h3>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            Resources
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="http://api.funtranslations.com" target="_blank">Fun Translator APIs</a>
+                            <a class="dropdown-item" href="https://developers.giphy.com/" target="_blank">Gifs from Giphy API</a>
+                            <a class="dropdown-item" href="http://rumandmonkey.com/widgets/toys/namegen#.WuSp2IjwZPY" target="_blank">Silly Name Generators</a>
+                            <a class="dropdown-item" href="http://developers.slapbot.com/" target="_blank">Jokes from Slapbot</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            About
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="https://www.twinword.com/api/word-associations.php" target="_blank">Word Associations API</a>
+                            <a class="dropdown-item" href="https://www.wordsapi.com/" target="_blank">Words API</a>
+                            <a class="dropdown-item" href="https://firebase.google.com/docs/" target="_blank">Firebase</a>
+                            <a class="dropdown-item" href="DevTeam.html" target="_blank">Dev Team</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </nav>
-        <a class="btn btn-outline-primary" href="#">About</a>
-    -->        
+
     </div>
-   
+
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
         <h1 class="display-4">Joke Generator Extraordinaire</h1>
-        <p class="lead"><strong>Use this app to spark your creativity</strong></p>
+        <p class="lead">
+            <strong>Use this app to spark your creativity</strong>
+        </p>
     </div>
-    <!-------------------------------->
-    <!-- <div class="container center_div col-md-8 order-md-1 text-center">
-        <h4 class="mb-3">User Input</h4>
-        <form class="needs-validation" novalidate>
-            <div class="row">
-                <div class="container center_div col-md-6 mb-3" id="input-search-terms-here">
-                    <label for="firstName">Type the word you want to tell jokes about</label>
-                    <input type="text" class="form-control" id="first-search-term" placeholder="" value="" required>
-                    <div class="invalid-feedback">
-                        Validation msg.
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div> -->
 
     <div class="row">
         <!-- side panel for search history -->
@@ -54,24 +71,14 @@
                         <span class="input-group-text" id="basic-addon1">name</span>
 
                     </div>
-                    <input type="text" class="form-control" id="username" placeholder="enter for view/track" aria-label="view search history" aria-describedby="basic-addon1">
+                    <input type="text" class="form-control" id="username" placeholder="enter for view/track" aria-label="view search history"
+                        aria-describedby="basic-addon1">
                 </div>
                 <button type="submit" class="btn btn-primary mt-2" id='usernameSubmit'>Previous search</button>
             </form>
             <h6 class="mb-1 ml-2 text-white">Topics Searched</h6>
-            
+
             <div class="list-group" id="topic-list">
-                <!-- <div class="list-group-item list-group-item-action flex-column align-items-start active">
-                    <div class="d-flex w-100 justify-content-left">
-                        <h6 class="mb-1" id="topic-name">List group item heading</h6>
-                        <small id="topic-time-searched">3 days ago</small>
-                    </div>
-                    <p class="mb-1" id="topic-detail">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                    <small>Find out</small>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#def-final">
-                        Final definition
-                    </button>
-                </div> -->
             </div>
             <!-- modal-->
             <div class="modal fade" id="def-final" tabindex="-1" role="dialog" aria-labelledby="defFinaleModalLabel" aria-hidden="true">
@@ -83,13 +90,14 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body" id="definition-list"><ul>
-                            <li>li 1</li>
-                            </ul>  
+                        <div class="modal-body" id="definition-list">
+                            <ul>
+                                <li>li 1</li>
+                            </ul>
                         </div>
                         <div class="modal-body" id="final-definition-list">
-                                Topic final definitions
-                            </div>
+                            Topic final definitions
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary">Save changes</button>
@@ -99,12 +107,9 @@
             </div>
         </div>
 
-        <!-- main serch area -->
+        <!-- main search area -->
         <div class="col col-md-9">
-            <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-                <h1 class="display-4">Joke Generator Extraordinaire</h1>
-                <p class="lead">Use this app to spark your creativity</p>
-            </div>
+
             <!-------------------------------->
             <div class="container center_div col-md-8 order-md-1 text-center">
                 <h4 class="mb-3">User Input</h4>
@@ -129,111 +134,48 @@
 
 
             <footer class="page-footer font-small stylish-color-dark pt-4 mt-4">
-
                 <!--Footer Links-->
                 <div class="container">
                     <div class="row">
-
-                        <hr class="clearfix w-100 d-md-none">
-
-                        <!--First column-->
-                        <div class="col-md-4 mx-auto">
-                            <h5 class="text-uppercase mb-4 mt-3 font-weight-bold">Resource Links</h5>
-                            <ul class="list-unstyled">
-                                <li>
-                                    <a href="http://api.funtranslations.com">Fun Translator APIs</a>
-                                </li>
-                                <li>
-                                    <a href="https://developers.giphy.com/">Gifs from Giphy API</a>
-                                </li>
-                                <li>
-                                    <a href="http://rumandmonkey.com/widgets/toys/namegen#.WuSp2IjwZPY">Silly Name Generators</a>
-                                </li>
-                                <li>
-                                    <a href="http://developers.slapbot.com/">Jokes from Slapbot</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <!--/.First column-->
-
-                        <hr class="clearfix w-100 d-md-none">
-
-                        <!--Second column-->
-                        <div class="col-md-2 mx-auto">
-                            <h5 class="text-uppercase mb-4 mt-3 font-weight-bold">About</h5>
-                            <ul class="list-unstyled">
-                                <li>
-                                    <a href="https://www.wordsapi.com/">Words API</a>
-                                </li>
-                                <li>
-                                    <a href="https://firebase.google.com/docs/">Firebase</a>
-                                </li>
-                                <li>
-                                    <a href="#!">Dev Team</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <!--/.Second column-->
                     </div>
                 </div>
-
                 <!--Social buttons-->
                 <div class="text-center">
                     <ul class="list-unstyled list-inline">
                         <li class="list-inline-item">
-                            <a href="https://www.facebook.com/" class="btn-floating btn-sm btn-fb mx-1">
-                                <i class="fa fa-facebook"> </i>
+                            <a href="https://youtube.com/?lang=en" target="_blank" class="btn-floating btn-sm btn-tw mx-1">
+                                <i class="fa fa-youtube"> </i>
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="https://twitter.com/?lang=en" class="btn-floating btn-sm btn-tw mx-1">
+                            <a href="https://plus.google.com/discover" target="_blank" class="btn-floating btn-sm btn-gplus mx-1">
+                                <i class="fa fa-google-plus"> </i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://twitter.com/?lang=en" target="_blank" class="btn-floating btn-sm btn-tw mx-1">
                                 <i class="fa fa-twitter"> </i>
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="https://plus.google.com/discover" class="btn-floating btn-sm btn-gplus mx-1">
-                                <i class="fa fa-google-plus"> </i>
+                            <a href="https://www.instagram.com/" target="_blank" class="btn-floating btn-sm btn-li mx-1">
+                                <i class="fa fa-instagram"> </i>
                             </a>
                         </li>
-                        <li>
-                            <a href="DevTeam.html">Dev Team</a>
+                        <li class="list-inline-item">
+                            <a href="https://www.facebook.com/" target="_blank" class="btn-floating btn-sm btn-fb mx-1">
+                                <i class="fa fa-facebook"> </i>
+                            </a>
                         </li>
                     </ul>
                 </div>
                 <!--/.Social buttons-->
-
-        <!--Social buttons-->
-        <div class="text-center">
-            <ul class="list-unstyled list-inline">
-                <li class="list-inline-item">
-                    <a href="https://youtube.com/?lang=en" class="btn-floating btn-sm btn-tw mx-1">
-                        <i class="fa fa-youtube"> </i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="https://plus.google.com/discover" class="btn-floating btn-sm btn-gplus mx-1">
-                        <i class="fa fa-google-plus"> </i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en" class="btn-floating btn-sm btn-tw mx-1">
-                            <i class="fa fa-twitter"> </i>
-                        </a>
-                    </li>
-                <li class="list-inline-item">
-                    <a href="https://www.instagram.com/" class="btn-floating btn-sm btn-li mx-1">
-                        <i class="fa fa-instagram"> </i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="https://www.facebook.com/" class="btn-floating btn-sm btn-fb mx-1">
-                        <i class="fa fa-facebook"> </i>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <!--/.Social buttons-->
-
+                <!--Bootstrap Copyright-->
+                <div class="footer-copyright py-3 text-center">
+                    © 2018 Copyright:
+                    <a href="https://mdbootstrap.com/material-design-for-bootstrap/" target="_blank"> MDBootstrap.com </a>
+                </div>
+                <!--/.Bootstrap Copyright-->
             </footer>
         </div>
         <!--/.Footer-->
@@ -255,7 +197,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
     <script src="assets/js/words.js"></script>
     <script src="assets/js/app.js"></script>
-    
+
 </body>
 
 </html>
