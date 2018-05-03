@@ -376,6 +376,8 @@ $(document).ready(function () {
 
         // here: save blurb to the database
         console.log(blurb);
+
+        Cib.saveFinalDefinition(blurb);
     });
 });
 
