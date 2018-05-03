@@ -384,7 +384,7 @@ $(document).ready(function () {
 
             var gifImg = $('<img>').attr({
                 'class': 'generated-gif',
-                'src': thisPic.images.fixed_height_still.url,
+                'src': thisPic.images.fixed_height.url,
                 'data-still': thisPic.images.fixed_height_still.url,
                 'data-animated': thisPic.images.fixed_height.url,
                 'data-state': 'still'
