@@ -1,6 +1,6 @@
 # The Joke Generator
 
-This application allows the user to 
+This application allows the user to generate ideas for a stand up comedy routine, utilizing API calls to return associated words and phrases, as well as images.  
 
 ### System Recommendations
 
@@ -8,7 +8,7 @@ This application may be accessed via any web browser but is optimized for use on
 
 ## Built With
 
-* [Bootstrap] (https://getbootstrap.com/docs/4.1/getting-started/introduction/) - The web framework used
+* [Bootstrap](https://getbootstrap.com/docs/4.1/getting-started/introduction/) - The web framework used
 * [Github](https://github.com/) - Content Management
 * [Firebase](https://firebase.google.com/) - Used to host saved datasets
 
@@ -31,5 +31,5 @@ All rights reserved; please contact the authors for permission to utilize this a
 
 ## Acknowledgments
 
-* The inspiration for this app was celebrating the joy of laughter and the process of creating humor.  We recognize that inspiration may be found anywhere and is often spontaneous, but we strive to assist those are creating and developing material consistently and intentionally.   
+* The inspiration for this app was celebrating the joy of laughter and the process of creating humor.  We recognize that inspiration may be found anywhere and can be spontaneous, but we strive to assist those are creating and developing material consistently and intentionally.   
 
