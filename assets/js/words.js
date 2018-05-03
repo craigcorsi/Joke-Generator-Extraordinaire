@@ -1,18 +1,17 @@
-
-  function Cib() {
+function Cib() {
 
     // to DOM elements   -- topic history section
     this.topicList = document.getElementById('topic-list');
-    this.topicName = document.getElementById('topic-name');
-    this.topicTimeSearched = document.getElementById('topic-time-searched');
-    this.topicDetail = document.getElementById('topic-detail')
+    this.topicName = document.getElementsByClassName('topic-name');
+    this.topicTimeSearched = document.getElementsByClassName('topic-time-searched');
+    this.topicDetail = document.getElementsByClassName('topic-detail')
 
     this.usernameInput = document.getElementById('username');
     this.topicInput = document.getElementById('first-search-term')
     this.definitionsChoice = this.getDefinitionsChoice();
     this.finalDefinitionsChoice = this.getFinalDefinitionsChoice();
 
-    // to DOM elements -- build process
+    // to DOM elements -- element build process
     this.usernameSubmitButton = document.getElementById('usernameSubmit');
     this.topicSubmitButton = document.getElementById('button-submit-term');
     this.definitionsSubmitButton = document.getElementsByClassName('definitionsSubmit')
@@ -20,11 +19,11 @@
     this.usernameForm = document.getElementById("usernameForm");
     this.topicForm = document.getElementById("topic-form");
     //this.definitionsForm = document.getElementById()
-    
 
-    // save topic on submit
     console.log(this.usernameForm);
     console.log(this.topicForm);
+
+    // save to firebase on submit
     this.usernameForm.addEventListener('submit', this.saveUsername.bind(this));
     this.topicForm.addEventListener('submit', this.saveTopic.bind(this));
     //this.topicForm.addEventListener('submit', this.saveDefinitions.bind(this)); 
@@ -33,13 +32,14 @@
     var buttonTogglingHandler = this.toggleButton.bind(this);
     // this.usernameInput.addEventListener('keyup', this.loadTopicHistory.bint(this));
     // this.usernameInput.addEventListener('change', this.loadTopicHistory.bint(this));
+
     this.Topic_TEMPLATE = `<div class="list-group-item list-group-item-action flex-column align-items-start active">
                       <div class="d-flex w-100 justify-content-left">
-                          <h6 class="mb-1" id="topic-name">topicName</h6>
-                          <small id="topic-time-searched">timeSearched</small>
+                          <h6 class="mb-1 topic-name">topicName</h6>
+                          <small class="topic-time-searched">timeSearched</small>
                       </div>
-                      <small>Find out</small>
-                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#def-final">
+                      <small>Find</small>
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".def-final">
                           Final definition
                       </button>
                       </div>`;
@@ -59,6 +59,11 @@
     //this.usersRef.limitToLast(1).on('child_changes', setUserName);
   }
 
+  /**
+   * username related
+   * @param {*} key 
+   * @param {*} name 
+   */
   Cib.prototype.displayUsername = function(key, name) {
     document.querySelector('#username').value = name;
   }
@@ -80,52 +85,20 @@
     }
   };
 
-  Cib.prototype.createTopicCard = function(val) {
-    var timeSearched;
-    if (!val.hasOwnProperty('searchedTime')) {
-      timeSearched = 'not known';
-    }
-    else {
-      console.log(val.searchedTime);
-      timeSearched = moment.unix(val.searchedTime/1000).format("LLL"); 
-    }
-      
-    var card = `<div class="list-group-item list-group-item-action flex-column mb-1 align-items-start active">
-                <div class="d-flex w-100 justify-content-left">
-                    <h5 class="mb-1 mr-4" id="topic-name">${val.topic}</h5>
-                    <small class="align-right" id="topic-time-searched">${timeSearched}</small>
-                </div>
-                <small>View </small>
-                <button type="button" class="btn btn-primary modal-btn" data-toggle="modal" data-target=".def-final">
-                    Final definition
-                </button>
-                </div>`;
-    return card;
-  }
-
-
-  //https://codepen.io/jkrehm/pen/OybdrW ****************************************
-  Cib.prototype.createDefinitionListItem = function(val) {
-    var topic, definitions, definitionListItem;
-    topic = val.hasOwnProperty('topic') ? val.topic : 'Not known';
-    definitions = val.hasOwnProperty('definitions') ? Array.from(val.definitions[0]) : 'Not known';
-    
-    $(document).find('.topic-title').text(topic);
-
-    $(document).find('.definition-list > ul').empty();
-    definitions.forEach(function(definition) {
-      definitionListItem = '';
-      definitionListItem = `<li>${definition}</li>`;
-      $(document).find('.definition-list > ul').append(definitionListItem);
-    })
-    
-  }
-
+  /**
+   * topic related
+   * @param {*} val 
+   */
+  
   Cib.prototype.loadTopics = function() {
     var setTopics = function(data) {
       var val = data.val();
       console.log(data, val);
       this.displayTopic(data.key, val)
+
+      // after each topic card is created/displayed, load definitions
+      //this.loadDefinitions();
+
     }.bind(this);
 
     this.topicsRef.limitToLast(3).on('child_added', setTopics);
@@ -161,6 +134,55 @@
     }
   }
 
+  Cib.prototype.createTopicCard = function(val) {
+    var timeSearched;
+    if (!val.hasOwnProperty('searchedTime')) {
+      timeSearched = 'not known';
+    }
+    else {
+      console.log(val.searchedTime);
+      timeSearched = moment.unix(val.searchedTime/1000).format("LLL"); 
+    }
+      
+    var card = `<div class="list-group-item list-group-item-action flex-column mb-1 align-items-start active">
+                <div class="d-flex w-100 justify-content-left">
+                    <h5 class="mb-1 mr-4 topic-name">${val.topic}</h5>
+                    <small class="align-right topic-time-searched" >${timeSearched}</small>
+                </div>
+                <small>View </small>
+                <button type="button" class="btn btn-primary modal-btn" data-toggle="modal" 
+                        data-topic='${val.topic}' data-username='${val.username}' data-searchedTime='${val.searchedTime}' 
+                        data-definitions = '${val.definitions}' 
+                        data-finalDefinitions = '${val.finalDefinitions}' 
+                        data-target=".def-final"> Final definition
+                </button>
+                </div>`;
+    return card;
+  }
+
+  /**
+   * definition related
+   */
+  //https://codepen.io/jkrehm/pen/OybdrW ****************************************
+  Cib.prototype.createDefinitionListItem = function(val) {
+    var topic, searchedTime, definitions, definitionListItem;
+    topic = val.hasOwnProperty('topic') ? val.topic : 'Not known';
+    searchedTime =  val.hasOwnProperty('searchedTime') ? val.searchedTime : 0;
+    definitions = val.hasOwnProperty('definitions') ? Array.from(val.definitions[0]) : 'Not known';
+    strDefinitions = JSON.stringify(definitions);
+
+    console.log(definitions);
+    console.log(JSON.stringify(definitions));
+
+    var data = {
+      topic: topic,
+      searchedTime: searchedTime,
+      definitions: strDefinitions
+    }
+    // do not create topic card at this point. Final Definition process include topic card generation
+    $(document).find('#topic-list').append(this.createTopicCard(data));
+  }
+
   Cib.prototype.loadDefinitions = function() {
     var setDefinitions = function(data) {
       var val = data.val();
@@ -171,37 +193,14 @@
     this.definitionsRef.limitToLast(3).on('child_added', setDefinitions);
   }
 
-
-  // load modal content on click the button "#modal-brn"
-  $(document).on('click', '.modal-btn', function() {
-    // $(document).load(this.loadDefinitions, '.definition-list', function() {
-    //   $(document).find('.def-final').modal({show:true});
-    // });
-
-    // $('.definition-list').load(this.loadDefinitions, function() {
-    //   $('.def-final').modal({show:true});
-    // });
-    console.log("are inside");
-    $(".definition-list > ul").append("some test");
-
-    Cib.loadDefinitions();
-  });
-
-  
-
-  
   Cib.prototype.displayDefinition = function(key, val) {
-   
     this.createDefinitionListItem(val);
-    // console.log(key, val.topic, val.searchedTime);
-    // var topicName = val.topic;
-     //document.querySelector('#topic-list').append(this.Topic_TEMPLATE);
-    $(document).find('.definition-list > ul').append(this.createDefinitionListItem(val));
+    
+   // $(document).find('.definition-list > ul').append(this.createDefinitionListItem(val));
   }
 
   Cib.prototype.saveDefinition = function() {
-    //e.preventDefault();
-
+    //e.preventDefault(); // this statement will be needed for normal situation, but this statement is already called in app.js for click event
     if (this.definitionsChoice) {
       var definitionsInputValue = this.getDefinitionsChoice();
       var topicInputValue = this.topicInput.value;
@@ -210,37 +209,154 @@
       this.definitionsRef.push({
         username: usernameInputValue,
         topic: topicInputValue,
-        definitions: [definitionsInputValue]
+        definitions: [definitionsInputValue],
+        searchedTime: firebase.database.ServerValue.TIMESTAMP
       }).then(function() {
         //Cib.resetMaterialTextfield(this.definitionsInput);
         //this.toggleButton();
+        this.toggleButton(this.topicInput, this.topicSubmitButton);
+        // load definitions to topic history card
+        //this.loadDefinitions();
       }.bind(this)).catch(function(error) {
         console.error('Error saving username to firebase', error);
       });
     }
   }
 
-  Cib.prototype.loadFinalDefinitions = function() {
+/**
+ * modal thing
+ * load modal content on click the button "#modal-btn"
+ */
+// $(".def-final").on('show.bs.modal', function(e) {
+//   var targetTopicCard = $(e.relatedTarget);
+//   var username = targetTopicCard.data('username');
+//   var topic = targetTopicCard.data('topic');
+//   var searchedTime = targetTopicCard.data('searchedTime');
+//   var definitions = JSON.parse(targetTopicCard.data('definitions'));
+//   //var definitions = targetTopicCard.data('definitions');
+//   console.log(definitions);
 
+//   // this here is the modal popup
+//   $(this).find('.topic-title').text(topic);
+//   var definitionListItem;
+//   var $definitionList = $(this).find('.modal-body.definition-list > ul').empty();
+//   definitions.forEach(function(definition) {
+//       definitionListItem = '';
+//       definitionListItem = `<li>${definition}</li>`;
+//     $definitionList.append(definitionListItem);
+//   });
+// })
+
+// $(document).on('show.bs.modal', '.def-final', function(e) {
+//   var targetTopicCard = $(e.relatedTarget);
+//   var username = targetTopicCard.data('username');
+//   var topic = targetTopicCard.data('topic');
+//   var searchedTime = targetTopicCard.data('searchedTime');
+//   // var definitions = JSON.parse( targetTopicCard.data('definitions'));
+//   var definitions = targetTopicCard.data('definitions');
+ 
+//   // this here is the modal popup
+//   $(this).find('.topic-title').text(topic);
+//   var definitionListItem;
+//   var $definitionList = $(this).find('.modal-body.definition-list > ul').empty();
+//   definitions.forEach(function(definition) {
+//       definitionListItem = '';
+//       definitionListItem = `<li>${definition}</li>`;
+//     $definitionList.append(definitionListItem);
+//   });
+// })
+
+  $(document).on('click', '.modal-btn', function(e) {
+    $(".topic-title").text($(this).attr('data-topic'));
+    var definitions = $(this).attr('data-definitions').replace('[', '').replace('\"', '').replace(']', '');
+    var arrDefinitions = [];
+    arrDefinitions.push(definitions.split(','));
+
+    console.log(definitions);
+    console.log(Array.isArray(definitions));
+    console.log(arrDefinitions);
+    console.log(Array.isArray(arrDefinitions));
+
+    var definitionListItem;
+    $(document).find('.definition-list > ul').empty();
+    arrDefinitions[0].forEach(function(definition) {
+      definitionListItem = '';
+      definitionListItem = `<li>${definition}</li>`;
+      $(document).find('.definition-list > ul').append(definitionListItem);
+    })
+  });
+
+/**
+ * final definition related
+ */
+Cib.prototype.createFinalDefinitionListItem = function(val) {
+  var topic, searchedTime, definitions, definitionListItem;
+  topic = val.hasOwnProperty('topic') ? val.topic : 'Not known';
+  searchedTime =  val.hasOwnProperty('searchedTime') ? val.searchedTime : 0;
+  definitions = val.hasOwnProperty('definitions') ? Array.from(val.definitions[0]) : 'Not known';
+  finalDefinitions = val.hasOwnProperty('finalDefinitions') ? Array.from(val.finalDefinitions[0]) : 'Not known';
+  strDefinitions = JSON.stringify(definitions);
+  strFinalDefinitions = JSON.stringify(finalDefinitions);
+
+  console.log(definitions);
+  console.log(JSON.stringify(definitions));
+  console.log(finalDefinitions);
+  console.log(JSON.stringify(finalDefinitions));
+
+  var data = {
+    topic: topic,
+    searchedTime: searchedTime,
+    definitions: strDefinitions, 
+    finalDefinitions: finalDefinitions
+  }
+  $(document).find('#topic-list').append(this.createTopicCard(data));
+}
+
+  Cib.prototype.loadFinalDefinitions = function() {
+    var setFinalDefinitions = function(data) {
+      var val = data.val();
+      console.log(data, val);
+      this.displayFinalDefinition(data.key, val)
+    }.bind(this);
+
+    this.finalDefinitionsRef.limitToLast(3).on('child_added', setFinalDefinitions);
   }
 
-  Cib.prototype.saveFinalDefinition = function() {
-    e.preventDefault();
+  Cib.prototype.displayFinalDefinition = function(key, val) {
+    this.createFinalDefinitionListItem(val);
+    
+   // $(document).find('.definition-list > ul').append(this.createDefinitionListItem(val));
+  }
 
-    if (this.definitionsChoice) {
-      var finalDefinitionsInpoutValue = this.finalDefinitionsChoice;
-      var definitionsInputValue = this.definitionsChoice;
+  Cib.prototype.saveFinalDefinition = function(finalDefinitionWords) {
+    //e.preventDefault();
+    var strDefinitions;
+    var topicName;
+    var userName;
+    this.definitionsRef.limitToLast(1).once('child_added', function(snap) {
+      var val = snap.val();
+      topicNaem = val.topic;
+      userName = val.username;
+      var definitions = val.hasOwnProperty('definitions') ? Array.from(val.definitions[0]) : 'Not known';
+      strDefinitions = JSON.stringify(definitions);
+    });
+
+    if (finalDefinitionWords) {
+      var finalDefinitionsInpoutValue = finalDefinitionWords;
+      var definitionsInputValue = strDefinitions;
       var topicInputValue = this.topicInput.value;
       var usernameInputValue = this.usernameInput.value;
 
-      this.definitionsRef.push({
+      this.finalDefinitionsRef.push({
         username: usernameInputValue,
         topic: topicInputValue,
         definitions: [definitionsInputValue], 
-        finalDefinitions: [finalDefinitionsInpoutValue]
+        finalDefinitions: [finalDefinitionsInpoutValue],
+        searchedTime: firebase.database.ServerValue.TIMESTAMP
       }).then(function() {
         //Cib.resetMaterialTextfield(this.definitionsInput);
-        this.toggleButton();
+        //this.toggleButton();
+        this.toggleButton(this.topicInput, this.topicSubmitButton);
       }.bind(this)).catch(function(error) {
         console.error('Error saving username to firebase', error);
       });
@@ -252,6 +368,9 @@
     element.parentNode.MaterialTextfield.boundUpdateClassesHandler();
   }
   
+  /**
+   * firebase initialization
+   */
   Cib.prototype.initFirebase = function() {
       // Initialize Firebase
     var config = {
@@ -272,6 +391,9 @@
     this.finalDefinitionsRef = this.database.ref('finalDefinitions');
   }
 
+  /**
+   * pull values from DOM
+   */
   Cib.prototype.getDefinitionsChoice = function() {
     // var selectedDefinitions = document.getElementsByClassName('option-ask')
     //         .children('.defChoice[data-selected=true]');
@@ -283,6 +405,14 @@
       defs.push(item.textContent);
     })
     return defs;
+  }
+
+  Cib.prototype.getLastDefinitionsFromFirebase = function() {
+    this.definitionsRef.limitToLast(1).once('child_added', function(snap) {
+      var val = snap.val();
+      var definitions = val.hasOwnProperty('definitions') ? Array.from(val.definitions[0]) : 'Not known';
+      var strDefinitions = JSON.stringify(definitions);
+    });
   }
 
   Cib.prototype.getFinalDefinitionsChoice = function() {
@@ -314,44 +444,10 @@
     // }
   };
     
-//   Cib.TOPIC_TEMPLATE = ` <a hrref="#" class="list-group-item list-group-item-action flex-column align-items-start">
-//   <div class="d-flex w-100 justify-content-between">
-//       <h5 class="mb-1" id="topic-name">${topicName}</h5>
-//       <small class="text-muted" id="topic-searched-time">${timeSearched}</small>
-//   </div><p class="mb-1" id="topic-detail">${detailList}</small>
-// </a>`;
-
-
-
+  // start app
   window.onload = function() {
     window.Cib = new Cib();
     Cib.loadUsername();
-    Cib.loadTopics();
-    //Cib.loadDefinitions();
+    //Cib.loadTopics();
+    Cib.loadDefinitions();
   }
-
-
-
-
-// get the data 
-// var loadTopicHistory = function (user, $topicList) {
-
-//   dataRef.ref("/topics").on("child_added", function (snap) {
-//     var topicName = snap.val().name;
-//     //var definitions = snap.val().definitions;
-//     var timeSearched = snap.val().earchedTime;
-
-//     var userInfo = snap.val().username;
-
-//     var detailList = getDefinitionListForTopic(definitions);
-//     var content = ` <a hrref="#" class="list-group-item list-group-item-action flex-column align-items-start">
-//                                 <div class="d-flex w-100 justify-content-between">
-//                                     <h5 class="mb-1" id="topic-name">${topicName}</h5>
-//                                     <small class="text-muted" id="topic-searched-time">${timeSearched}</small>
-//                                 </div><p class="mb-1" id="topic-detail">${detailList}</small>
-//                             </a>`;
-//     $topicList.append(content);
-//   });
-// };
-
-

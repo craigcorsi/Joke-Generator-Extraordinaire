@@ -361,6 +361,8 @@ $(document).ready(function () {
         event.preventDefault();
         var blurb = $(this).parent().find('.words-in-cell')[0].innerText;
         console.log(blurb);
+
+        Cib.saveFinalDefinition(blurb);
     });
 });
 
