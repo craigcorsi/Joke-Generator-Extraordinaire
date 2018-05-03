@@ -244,10 +244,13 @@ $(document).ready(function () {
         // filter out stop words
         searchTerms = searchTerms.filter(checkStopWord);
 
+        console.log(searchTerms);
+
         // this will be the list of words that return a definition
         var validWords = [];
         // this is an array of each valid word's list of definitions
         var definitionLists = [];
+
 
         Cib.saveTopic();
 
