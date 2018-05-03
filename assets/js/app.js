@@ -1,16 +1,18 @@
-var wordsApiKey = '0reA09JpgnmshGI6Z2Sxl6usmjoWp1aEIV4jsn1ImdkLbThVb6';
-var associationsApiKey = 'GyoDeRAZNBCMnmRq66QcsjebGxB6urkrIJet8PNk9eLYA+/tt0y27DPlLWTajxBGjSFm/kYCosEu36X4Sx08fg==';
-var searchTerm;
+var apiKey = '0reA09JpgnmshGI6Z2Sxl6usmjoWp1aEIV4jsn1ImdkLbThVb6';
+// var associationsApiKey = 'GyoDeRAZNBCMnmRq66QcsjebGxB6urkrIJet8PNk9eLYA+/tt0y27DPlLWTajxBGjSFm/kYCosEu36X4Sx08fg==';
+var giphyKey = 'irKsuYqDdx0NOhuarY8zv12EF5Jp48jk';
 
+// list of word attributes accompanying WordsAPI search results
 var wordAttributes = ['also', 'attribute', 'entails', 'examples', 'hasSubstances', 'hasCategories', 'inCategory', 'partOf', 'pertainsTo', 'similarTo', 'substanceOf', 'synonyms', 'typeOf'];
 
 // list of unimportant words to filter out
-var stopWords = ["the", "a", "about", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "along", "already", "also","although","always","am","among", "amongst", "amoungst", "amount",  "an", "and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", "are", "around", "as",  "at", "back","be","became", "because","become","becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "both", "bottom","but", "by", "call", "can", "cannot", "cant", "co", "con", "could", "couldnt", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven","else", "elsewhere", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "him", "himself", "his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "itself", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "myself", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own","part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thick", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves"];
+var stopWords = ["the", "a", "about", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "along", "already", "also", "although", "always", "am", "among", "amongst", "amoungst", "amount", "an", "and", "another", "any", "anyhow", "anyone", "anything", "anyway", "anywhere", "are", "around", "as", "at", "back", "be", "became", "because", "become", "becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "both", "bottom", "but", "by", "call", "can", "cannot", "cant", "co", "con", "could", "couldnt", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven", "else", "elsewhere", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "him", "himself", "his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "itself", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "myself", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own", "part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thick", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves"];
 
-function checkStopWord (word) {
+function checkStopWord(word) {
     return stopWords.indexOf(word) == -1;
 }
 
+var searchTerm;
 var currentWords;
 var currentLists;
 
@@ -157,6 +159,8 @@ function buildCells(cellList) {
         "background-color": '#99aabb'
     });
     for (var c = 0; c < cellList.length; c++) {
+
+        // build a cell containing a blurb of several related words
         var cell = $('<div>').attr({
             'class': 'wordCell'
         }).css({
@@ -178,63 +182,38 @@ function buildCells(cellList) {
         cell.append(noButton);
 
         cellContainer.append(cell);
+
+        //
+        // then, build a cell containing a GIF inspired by the jumble
+        //
+
+        var cell = $('<div>').attr({
+            'class': 'wordCell',
+            'data-text': words[a]
+        }).css({
+            'border': '1px solid black',
+            'border-radius': '5px',
+            'padding': '5px 10px',
+            'margin': '20px',
+            "background-color": 'white'
+        }).html('<p>').find('p').text('How about this image?').attr('class','qtext').parent();
+
+        var bttn = $('<button>').html('Show').attr('class', 'gif-button').css({
+            'padding': '5px',
+            'border-radius': '3px'
+        });
+        cell.append(bttn);
+
+        cellContainer.append(cell);
     }
     $('#search-results-here').append(cellContainer);
+
 }
 
 
 
 
-//
-//          (DEPRECATED FUNCTION) function 'pullRelatedWords' takes a word with a specific definition and displays 
-//          several related words in the browser
-//
 
-
-// (DEPRECATED FUNCTION)
-// function pullRelatedWords(term) {
-//     var cell = $('<div>').css({
-//         'border': '1px solid black',
-//         'border-radius': '5px',
-//         'padding': '15px',
-//         'margin': '10px'
-//     });
-//     cell.append("<p>The definition of this word is: " + term.definition + ".</p>")
-
-//     if (term.synonyms) {
-//         cell.append("<p> Here are a few related words: </p>");
-//         var l = term.synonyms.length;
-//         for (var i = 0; i < l; i++) {
-//             cell.append(term.synonyms[i] + "<br>");
-//         }
-//         cell.append("<br>");
-//     }
-
-//     if (term.typeOf) {
-//         cell.append("<p> This word is a type of: </p>");
-//         var l = term.typeOf.length;
-//         for (var i = 0; i < l; i++) {
-//             cell.append(term.typeOf[i] + "<br>");
-//         }
-//         cell.append("<br>");
-//     }
-
-//     if (term.partOf) {
-//         $('#search-results-here').append(cell);
-//         cell.append("<p> This word is part of a: </p>");
-//         var l = term.partOf.length;
-//         for (var i = 0; i < l; i++) {
-//             cell.append(term.typeOf[i] + "<br>");
-//         }
-//         cell.append("<br>");
-//     }
-
-//     $('#search-results-here').prepend(cell);
-// }
-
-//
-//          END of 'pullRelatedWords' function
-//
 
 
 
@@ -249,7 +228,7 @@ function buildCells(cellList) {
 
 //
 //
-// other ON-CLICK and ON-HOVER events
+// ON-CLICK and ON-HOVER events
 //
 //
 
@@ -260,7 +239,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         $("#input-search-terms-here").hide();
-     
+
         searchTerms = $('#first-search-term').val().trim().split(' ');
         // filter out stop words
         searchTerms = searchTerms.filter(checkStopWord);
@@ -269,43 +248,40 @@ $(document).ready(function () {
         var validWords = [];
         // this is an array of each valid word's list of definitions
         var definitionLists = [];
-      
+
         Cib.saveTopic();
 
         for (var i = 0; i < searchTerms.length; i++) {
             var j = 0;
             $.ajax({
                 url: "https://wordsapiv1.p.mashape.com/words/" + searchTerms[i],
-                async: false,
                 crossDomain: true,
                 headers: {
-                    "X-Mashape-Key": wordsApiKey,
+                    "X-Mashape-Key": apiKey
                 },
-                crossDomain: true,
                 xhrFields: {
                     withCredentials: true
                 }
             }).then(function (response) {
                 // get and store the word's 'definitions' array
-                console.log("Response: " + response);
                 validWords.push(searchTerms[j]);
                 definitionLists = definitionLists.concat([response.results]);
                 j++;
                 if (j == searchTerms.length) {
                     currentWords = validWords;
                     currentLists = definitionLists;
-                    console.log('finished collecting definitions');
-                    confirmDefinition();
+                    if (validWords.length > 0) {
+                        confirmDefinition();
+                    }
                 }
-                console.log(validWords);
-            }, function(error) {
-                console.log("Error: " + error);
+            }, function (error) {
                 j++;
                 if (j == searchTerms.length) {
                     currentWords = validWords;
                     currentLists = definitionLists;
-                    console.log('finished collecting definitions');
-                    confirmDefinition();
+                    if (validWords.length > 0) {
+                        confirmDefinition();
+                    }
                 }
             });
         }
@@ -348,7 +324,7 @@ $(document).ready(function () {
         });
 
         Cib.saveDefinition();
-        
+
         // create collection of cells of related words
         var relatedWordsList = createRelatedWordsList(terms);
         relatedWordsList = shuffle(relatedWordsList);
@@ -379,6 +355,83 @@ $(document).ready(function () {
 
         Cib.saveFinalDefinition(blurb);
     });
+
+    $('body').on('click', '.yes-button-gif', function () {
+        event.preventDefault();
+        var blurb1 = $(this).parent().find('img').attr('data-still');
+        var blurb2 = $(this).parent().find('img').attr('data-animated');
+
+        // here: save blurb to the database
+        console.log(blurb1, blurb2);
+    });
+
+
+
+
+    $('body').on('click', '.gif-button', function () {
+        event.preventDefault();
+        var parent = $(this).parent();
+        var searchTerm = $(this).parent().attr('data-text');
+        var giphyUrl = 'https://api.giphy.com/v1/gifs/search?api_key=' + giphyKey + '&q=' + searchTerm + '&limit=10&offset=0&rating=G&lang=en'
+
+
+        $.ajax({
+            async: false,
+            url: giphyUrl
+        }).then(function (response) {
+            var pics = response.data;
+            var rand = Math.floor(Math.random() * pics.length);
+            var thisPic = pics[rand];
+            // construct and display GIF image
+
+            var gifImg = $('<img>').attr({
+                'class': 'generated-gif',
+                'src': thisPic.images.fixed_height.url,
+                'data-still': thisPic.images.fixed_height_still.url,
+                'data-animated': thisPic.images.fixed_height.url,
+                'data-state': 'still'
+            }).css({
+                'border': '1px solid black',
+                'padding': 0
+            });
+
+            parent.append(gifImg);
+            parent.append('<br>');
+
+            var yesButton = $('<button>').attr('class', 'btn btn-primary yes-button-gif').html('Yes, save this').css('margin', '5px');
+            parent.append(yesButton);
+
+            var noButton = $('<button>').attr('class', 'btn btn-primary no-button').html('No, get rid of this');
+            parent.append(noButton);
+            parent.find('.gif-button').remove();
+            parent.find('.qtext').remove();
+
+        }, function (error) {
+            console.log(error);
+        });
+
+    });
+
+
+    // click on GIF images to animate them
+    $('body').on('click', '.generated-gif', function () {
+        var state = $(this).attr('data-state');
+        if (state == 'still') {
+            var newSrc = $(this).attr('data-animated');
+            console.log(newSrc);
+            $(this).attr({
+                'src': newSrc,
+                'data-state': 'animated'
+            });
+        } else {
+            var newSrc = $(this).attr('data-still');
+            $(this).attr({
+                'src': newSrc,
+                'data-state': 'still'
+            });
+        }
+    });
+
 });
 
 /*
@@ -388,23 +441,31 @@ FIXES since last push:
 
 Future goals:
 
+-Implement word associations api
+
 -Add text to saved blurbs when click yes-button (with Grace)
 
--create a list of variable names for Stacey and Grace
 
 */
 
-$.ajax({
-    url: "https://api.twinword.com/api/v4/word/associations/sound",
-    crossDomain: true,
-    headers: {
-        "X-Mashape-Key": wordsApiKey,
-    },
-    xhrFields: {
-        withCredentials: true
-    }
-}).then(function (response) {
-    console.log(response);
-}, function(error) {
-    console.log(error);
-});
+// $.ajax({
+//     url: "https://api.twinword.com/api/v4/word/associations/burgers",
+//     headers: {
+//         'X-Twaip-Key': apiKey
+//     },
+//     xhrFields: {
+//         withCredentials: true
+//     }
+// }).then(function (response) {
+//     console.log(response);
+// }, function (error) {
+//     console.log(error);
+// });
+
+
+
+
+
+
+
+
