@@ -1,5 +1,5 @@
-var apiKey = '0reA09JpgnmshGI6Z2Sxl6usmjoWp1aEIV4jsn1ImdkLbThVb6';
-var testingKey = 'qINz8NnrVPmshq9TFlEf8RsC0frhp1CIQeRjsnY5jW3G47kS7P';
+var wordsApiKey = '0reA09JpgnmshGI6Z2Sxl6usmjoWp1aEIV4jsn1ImdkLbThVb6';
+var associationsApiKey = 'GyoDeRAZNBCMnmRq66QcsjebGxB6urkrIJet8PNk9eLYA+/tt0y27DPlLWTajxBGjSFm/kYCosEu36X4Sx08fg==';
 var searchTerm;
 
 var wordAttributes = ['also', 'attribute', 'entails', 'examples', 'hasSubstances', 'hasCategories', 'inCategory', 'partOf', 'pertainsTo', 'similarTo', 'substanceOf', 'synonyms', 'typeOf'];
@@ -57,7 +57,8 @@ function confirmDefinition() {
         'border': '1px solid black',
         'border-radius': '10px',
         'padding': '5px 10px',
-        'margin': '20px'
+        'margin': '20px',
+        "background-color": '#99aabb'
     });
 
 
@@ -74,7 +75,8 @@ function confirmDefinition() {
                 'border': '1px solid black',
                 'border-radius': '5px',
                 'padding': '5px 10px',
-                'margin': '20px'
+                'margin': '20px',
+                "background-color": 'white'
             }).html(currentWords[w] + ": " + currentLists[w][i].definition);
             optionAsk.append(defDiv);
         }
@@ -151,7 +153,8 @@ function buildCells(cellList) {
         'border': '1px solid black',
         'border-radius': '5px',
         'padding': '15px',
-        'margin': '10px'
+        'margin': '10px',
+        "background-color": '#99aabb'
     });
     for (var c = 0; c < cellList.length; c++) {
         var cell = $('<div>').attr({
@@ -160,7 +163,8 @@ function buildCells(cellList) {
             'border': '1px solid black',
             'border-radius': '5px',
             'padding': '5px 10px',
-            'margin': '20px'
+            'margin': '20px',
+            "background-color": 'white'
         }).html('How about THIS?<p class="words-in-cell">');
         var words = cellList[c];
         for (var a = 0; a < words.length; a++) {
@@ -260,17 +264,22 @@ $(document).ready(function () {
         searchTerms = $('#first-search-term').val().trim().split(' ');
         // filter out stop words
         searchTerms = searchTerms.filter(checkStopWord);
+
+        // this will be the list of words that return a definition
+        var validWords = [];
+        // this is an array of each valid word's list of definitions
         var definitionLists = [];
       
         Cib.saveTopic();
 
         for (var i = 0; i < searchTerms.length; i++) {
+            var j = 0;
             $.ajax({
                 url: "https://wordsapiv1.p.mashape.com/words/" + searchTerms[i],
                 async: false,
                 crossDomain: true,
                 headers: {
-                    "X-Mashape-Key": apiKey,
+                    "X-Mashape-Key": wordsApiKey,
                 },
                 crossDomain: true,
                 xhrFields: {
@@ -279,17 +288,21 @@ $(document).ready(function () {
             }).then(function (response) {
                 // get and store the word's 'definitions' array
                 console.log("Response: " + response);
+                validWords.push(searchTerms[j]);
                 definitionLists = definitionLists.concat([response.results]);
-                if (definitionLists.length == searchTerms.length) {
-                    currentWords = searchTerms;
+                j++;
+                if (j == searchTerms.length) {
+                    currentWords = validWords;
                     currentLists = definitionLists;
                     console.log('finished collecting definitions');
                     confirmDefinition();
                 }
+                console.log(validWords);
             }, function(error) {
                 console.log("Error: " + error);
-                if (definitionLists.length == searchTerms.length) {
-                    currentWords = searchTerms;
+                j++;
+                if (j == searchTerms.length) {
+                    currentWords = validWords;
                     currentLists = definitionLists;
                     console.log('finished collecting definitions');
                     confirmDefinition();
@@ -360,6 +373,8 @@ $(document).ready(function () {
     $('body').on('click', '.yes-button', function () {
         event.preventDefault();
         var blurb = $(this).parent().find('.words-in-cell')[0].innerText;
+
+        // here: save blurb to the database
         console.log(blurb);
 
         Cib.saveFinalDefinition(blurb);
@@ -369,9 +384,7 @@ $(document).ready(function () {
 /*
 
 FIXES since last push:
--cell container is removed when the last cell is removed
--splits a phrase into multiple words and searches each word
--filters out unimportant words
+-Successfully ignores words not in the dictionary
 
 Future goals:
 
@@ -379,9 +392,19 @@ Future goals:
 
 -create a list of variable names for Stacey and Grace
 
--Handle words that are not in the dictionary
--more words to jumble in?
-
-
 */
 
+$.ajax({
+    url: "https://api.twinword.com/api/v4/word/associations/sound",
+    crossDomain: true,
+    headers: {
+        "X-Mashape-Key": wordsApiKey,
+    },
+    xhrFields: {
+        withCredentials: true
+    }
+}).then(function (response) {
+    console.log(response);
+}, function(error) {
+    console.log(error);
+});
