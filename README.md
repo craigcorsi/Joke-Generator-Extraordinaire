@@ -14,9 +14,9 @@ This application may be accessed via any web browser but is optimized for use on
 
 ## APIs
 
-* [Words API] (https://www.wordsapi.com/) - limited dictionary look-up for English words
-* [Word Associations] (https://www.twinword.com/api/word-associations.php) - definitions and associated word phrases
-* [GIPHY ] (https://developers.giphy.com/) - Gifs
+* Words API: (https://www.wordsapi.com/) - find definitions and related words
+* Word Associations: (https://www.twinword.com/api/word-associations.php) - word associations with semantic distance score
+* GIPHY: (https://developers.giphy.com/) - the world's largest GIF library
 
 
 ## Authors
