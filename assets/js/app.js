@@ -189,7 +189,7 @@ function buildCells(cellList) {
 
         var cell = $('<div>').attr({
             'class': 'wordCell',
-            'data-text': words[a]
+            'data-text': words[0]
         }).css({
             'border': '1px solid black',
             'border-radius': '5px',
@@ -244,8 +244,6 @@ $(document).ready(function () {
         // filter out stop words
         searchTerms = searchTerms.filter(checkStopWord);
 
-        console.log(searchTerms);
-
         // this will be the list of words that return a definition
         var validWords = [];
         // this is an array of each valid word's list of definitions
@@ -274,6 +272,7 @@ $(document).ready(function () {
                     currentWords = validWords;
                     currentLists = definitionLists;
                     if (validWords.length > 0) {
+                        console.log(currentWords, currentLists);
                         confirmDefinition();
                     }
                 }
@@ -375,11 +374,11 @@ $(document).ready(function () {
         event.preventDefault();
         var parent = $(this).parent();
         var searchTerm = $(this).parent().attr('data-text');
+        console.log(searchTerm);
         var giphyUrl = 'https://api.giphy.com/v1/gifs/search?api_key=' + giphyKey + '&q=' + searchTerm + '&limit=10&offset=0&rating=G&lang=en'
 
 
         $.ajax({
-            async: false,
             url: giphyUrl
         }).then(function (response) {
             var pics = response.data;
