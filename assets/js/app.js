@@ -183,13 +183,29 @@ function buildCells(cellList) {
 
         cellContainer.append(cell);
 
+    }
+    $('#search-results-here').append(cellContainer);
+
+    // create complete button and append to 
+    var completeButton =  document.createElement("Button"); 
+    completeButton.setAttribute("name", "complete");
+    completeButton.setAttribute("class", "complete-button");
+    //completeButton.innerText = "Selection done";
+    completeButton.type = "button";
+    completeButton.appendChild(document.createTextNode("Selection done"));
+
+
         //
         // then, build a cell containing a GIF inspired by the jumble
         //
 
+
+    $('#search-results-here').append(completeButton);
+}
+
         var cell = $('<div>').attr({
             'class': 'wordCell',
-            'data-text': words[a]
+            'data-text': words[0]
         }).css({
             'border': '1px solid black',
             'border-radius': '5px',
@@ -197,6 +213,7 @@ function buildCells(cellList) {
             'margin': '20px',
             "background-color": 'white'
         }).html('<p>').find('p').text('How about this image?').attr('class','qtext').parent();
+
 
         var bttn = $('<button>').html('Show').attr('class', 'gif-button').css({
             'padding': '5px',
@@ -244,8 +261,6 @@ $(document).ready(function () {
         // filter out stop words
         searchTerms = searchTerms.filter(checkStopWord);
 
-        console.log(searchTerms);
-
         // this will be the list of words that return a definition
         var validWords = [];
         // this is an array of each valid word's list of definitions
@@ -274,6 +289,7 @@ $(document).ready(function () {
                     currentWords = validWords;
                     currentLists = definitionLists;
                     if (validWords.length > 0) {
+                        console.log(currentWords, currentLists);
                         confirmDefinition();
                     }
                 }
@@ -349,6 +365,7 @@ $(document).ready(function () {
 
     });
 
+    var finalChoices = [];
     $('body').on('click', '.yes-button', function () {
         event.preventDefault();
         var blurb = $(this).parent().find('.words-in-cell')[0].innerText;
@@ -356,8 +373,25 @@ $(document).ready(function () {
         // here: save blurb to the database
         console.log(blurb);
 
-        Cib.saveFinalDefinition(blurb);
+        finalChoices.push(blurb);
     });
+
+    // indicate completion of selecting the cells
+    $('body').on('click', '.complete-button', function() {
+        event.preventDefault();
+
+        // save final choices to firebase
+        Cib.saveFinalDefinition(finalChoices);     
+    
+        // display the final choices - this marks the end of the search
+        var searchResultHere = $('#search-results-here');
+        Cib.displayFinalChoices(searchResultHere, finalChoices);
+
+
+        Cib.saveFinalDefinition(blurb);
+
+    });
+
 
     $('body').on('click', '.yes-button-gif', function () {
         event.preventDefault();
@@ -375,11 +409,11 @@ $(document).ready(function () {
         event.preventDefault();
         var parent = $(this).parent();
         var searchTerm = $(this).parent().attr('data-text');
+        console.log(searchTerm);
         var giphyUrl = 'https://api.giphy.com/v1/gifs/search?api_key=' + giphyKey + '&q=' + searchTerm + '&limit=10&offset=0&rating=G&lang=en'
 
 
         $.ajax({
-            async: false,
             url: giphyUrl
         }).then(function (response) {
             var pics = response.data;
@@ -450,25 +484,4 @@ Future goals:
 
 
 */
-
-// $.ajax({
-//     url: "https://api.twinword.com/api/v4/word/associations/burgers",
-//     headers: {
-//         'X-Twaip-Key': apiKey
-//     },
-//     xhrFields: {
-//         withCredentials: true
-//     }
-// }).then(function (response) {
-//     console.log(response);
-// }, function (error) {
-//     console.log(error);
-// });
-
-
-
-
-
-
-
 
