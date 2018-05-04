@@ -187,7 +187,7 @@ function buildCells(cellList) {
     $('#search-results-here').append(cellContainer);
 
     // create complete button and append to 
-    var completeButton =  document.createElement("Button"); 
+    var completeButton = document.createElement("Button");
     completeButton.setAttribute("name", "complete");
     completeButton.setAttribute("class", "complete-button");
     //completeButton.innerText = "Selection done";
@@ -195,37 +195,37 @@ function buildCells(cellList) {
     completeButton.appendChild(document.createTextNode("Selection done"));
 
 
-        //
-        // then, build a cell containing a GIF inspired by the jumble
-        //
+    //
+    // then, build a cell containing a GIF inspired by the jumble
+    //
 
 
     $('#search-results-here').append(completeButton);
 }
 
-        var cell = $('<div>').attr({
-            'class': 'wordCell',
-            'data-text': words[0]
-        }).css({
-            'border': '1px solid black',
-            'border-radius': '5px',
-            'padding': '5px 10px',
-            'margin': '20px',
-            "background-color": 'white'
-        }).html('<p>').find('p').text('How about this image?').attr('class','qtext').parent();
+var cell = $('<div>').attr({
+    'class': 'wordCell',
+    'data-text': words[0]
+}).css({
+    'border': '1px solid black',
+    'border-radius': '5px',
+    'padding': '5px 10px',
+    'margin': '20px',
+    "background-color": 'white'
+}).html('<p>').find('p').text('How about this image?').attr('class', 'qtext').parent();
 
 
-        var bttn = $('<button>').html('Show').attr('class', 'gif-button').css({
-            'padding': '5px',
-            'border-radius': '3px'
-        });
-        cell.append(bttn);
+var bttn = $('<button>').html('Show').attr('class', 'gif-button').css({
+    'padding': '5px',
+    'border-radius': '3px'
+});
+cell.append(bttn);
 
-        cellContainer.append(cell);
-    }
-    $('#search-results-here').append(cellContainer);
+cellContainer.append(cell);
+    
+$('#search-results-here').append(cellContainer);
 
-}
+
 
 
 
@@ -372,24 +372,19 @@ $(document).ready(function () {
 
         // here: save blurb to the database
         console.log(blurb);
-
         finalChoices.push(blurb);
     });
 
     // indicate completion of selecting the cells
-    $('body').on('click', '.complete-button', function() {
+    $('body').on('click', '.complete-button', function () {
         event.preventDefault();
 
         // save final choices to firebase
-        Cib.saveFinalDefinition(finalChoices);     
-    
+        Cib.saveFinalDefinition(finalChoices);
+
         // display the final choices - this marks the end of the search
         var searchResultHere = $('#search-results-here');
         Cib.displayFinalChoices(searchResultHere, finalChoices);
-
-
-        Cib.saveFinalDefinition(blurb);
-
     });
 
 
