@@ -183,9 +183,25 @@ function buildCells(cellList) {
 
         cellContainer.append(cell);
 
+    }
+    $('#search-results-here').append(cellContainer);
+
+    // create complete button and append to 
+    var completeButton =  document.createElement("Button"); 
+    completeButton.setAttribute("name", "complete");
+    completeButton.setAttribute("class", "complete-button");
+    //completeButton.innerText = "Selection done";
+    completeButton.type = "button";
+    completeButton.appendChild(document.createTextNode("Selection done"));
+
+
         //
         // then, build a cell containing a GIF inspired by the jumble
         //
+
+
+    $('#search-results-here').append(completeButton);
+}
 
         var cell = $('<div>').attr({
             'class': 'wordCell',
@@ -197,6 +213,7 @@ function buildCells(cellList) {
             'margin': '20px',
             "background-color": 'white'
         }).html('<p>').find('p').text('How about this image?').attr('class','qtext').parent();
+
 
         var bttn = $('<button>').html('Show').attr('class', 'gif-button').css({
             'padding': '5px',
@@ -348,6 +365,7 @@ $(document).ready(function () {
 
     });
 
+    var finalChoices = [];
     $('body').on('click', '.yes-button', function () {
         event.preventDefault();
         var blurb = $(this).parent().find('.words-in-cell')[0].innerText;
@@ -355,8 +373,25 @@ $(document).ready(function () {
         // here: save blurb to the database
         console.log(blurb);
 
-        Cib.saveFinalDefinition(blurb);
+        finalChoices.push(blurb);
     });
+
+    // indicate completion of selecting the cells
+    $('body').on('click', '.complete-button', function() {
+        event.preventDefault();
+
+        // save final choices to firebase
+        Cib.saveFinalDefinition(finalChoices);     
+    
+        // display the final choices - this marks the end of the search
+        var searchResultHere = $('#search-results-here');
+        Cib.displayFinalChoices(searchResultHere, finalChoices);
+
+
+        Cib.saveFinalDefinition(blurb);
+
+    });
+
 
     $('body').on('click', '.yes-button-gif', function () {
         event.preventDefault();
@@ -449,25 +484,4 @@ Future goals:
 
 
 */
-
-// $.ajax({
-//     url: "https://api.twinword.com/api/v4/word/associations/burgers",
-//     headers: {
-//         'X-Twaip-Key': apiKey
-//     },
-//     xhrFields: {
-//         withCredentials: true
-//     }
-// }).then(function (response) {
-//     console.log(response);
-// }, function (error) {
-//     console.log(error);
-// });
-
-
-
-
-
-
-
 
