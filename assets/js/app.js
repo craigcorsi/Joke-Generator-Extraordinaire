@@ -386,7 +386,6 @@ $(document).ready(function () {
 
         // here: save blurb to the database
         console.log(blurb);
-<<<<<<< HEAD
         finalChoices.push(blurb);
     });
 
@@ -400,10 +399,6 @@ $(document).ready(function () {
         // display the final choices - this marks the end of the search
         var searchResultHere = $('#search-results-here');
         Cib.displayFinalChoices(searchResultHere, finalChoices);
-=======
-
-        Cib.saveFinalDefinition(blurb);
->>>>>>> 9f6abe74b0f3aade8aec1d32903ed4098d3dc98a
     });
 
 /*
@@ -432,10 +427,6 @@ $.ajax({
     console.log(response);
 }, function(error) {
     console.log(error);
-<<<<<<< HEAD
 });
 });
 
-=======
-});
->>>>>>> 9f6abe74b0f3aade8aec1d32903ed4098d3dc98a
