@@ -10,9 +10,22 @@ body {
 
 #humorHeader {
     background-color: black;
-    padding-left: 0px;
     max-height: 100px;
+  
+}
+
+.navbar-nav > li{
+    padding-left:50px;
     padding-right:50px;
+  }
+
+  .navbar-nav li a{
+    color:pink;
+  }
+
+  .dropdown-toggle:active, .open .dropdown-toggle {
+    background:#FFF !important; 
+    color:#000 !important;
 }
 
 h1,h2,h3,h4,h5,p,label {
