@@ -115,3 +115,7 @@ img {
     background: #ff6600;
     color: white;
 }
+
+#phrase-to-search {
+  width: 95%;
+}
