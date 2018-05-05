@@ -130,5 +130,11 @@ img {
 }
 
 #phrase-to-search {
-  width: 95%;
+    width: 90%;
+    margin: 0 auto;
+}
+
+#saved-items {
+    padding-left: 30px;
+    padding-bottom: 10px;
 }
