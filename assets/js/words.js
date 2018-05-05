@@ -98,21 +98,25 @@ Cib.prototype.saveUsername = function (e) {
  */
 Cib.prototype.checkIfExistingUser = function (username) {
   var found;
-  this.usersRef.orderByChild("name")
+  this.usersRef.orderByChild('name')
     .equalTo(username)
     .once('child_added', function (snap) {
-      if (snap.val().name) found = true;
+      console.log(snap.val().name)
+      if (snap.val().name == username) found = true;
       else found = false;
+
+      console.log("found: " + found);
+      return found;
     }.bind(this));
-  console.log("found: " + found);
-  return found;
 }
 
 Cib.prototype.searchCountForUser = function (username) {
   var searchCount;
-  this.finalDefinitionsRef.orderByChild('name')
+  this.finalDefinitionsRef.child('username')
+    .orderByChild('username')
     .equalTo(username)
     .once('child_added', function (snap) {
+      console.log(snap.val().username)
       var finalDefinitions = Array.from(snap.val());
       searchCount = finalDefinitions.length;
     }.bind(this));
@@ -178,31 +182,6 @@ Cib.prototype.saveTopic = function (e) {
   }
 }
 
-Cib.prototype.createTopicCard = function (val) {
-  var timeSearched;
-  if (!val.hasOwnProperty('searchedTime')) {
-    timeSearched = 'not known';
-  } else {
-    console.log(val.searchedTime);
-    timeSearched = moment.unix(val.searchedTime / 1000).format("L");
-  }
-
-  var card = `<div class="list-group-item list-group-item-action flex-column mb-1 align-items-start active">
-                  <div class="d-flex w-100 justify-content-left">
-                      <h5 class="mb-1  topic-name">${val.topic}</h5>
-                      <small class="align-right py-2 topic-time-searched" >${timeSearched}</small>
-                  </div>
-                  <small>View </small>
-                  <button type="button" class="btn btn-primary modal-btn" data-toggle="modal" 
-                          data-topic='${val.topic}' data-username='${val.username}' data-searchedtime='${timeSearched}' 
-                          data-definitions = '${val.definitions}' 
-                          data-finaldefinitions = '${val.finalDefinitions}' 
-                          data-target=".def-final"> Final definition
-                  </button>
-                  </div>`;
-  return card;
-}
-
 /**
  * definition related
  */
@@ -223,7 +202,7 @@ Cib.prototype.createDefinitionListItem = function (val) {
     definitions: strDefinitions
   }
   // do not create topic card at this point. Final Definition process include topic card generation
-  $(document).find('#topic-list').append(this.createTopicCard(data));
+  //$(document).find('#topic-list').append(this.createTopicCard(data));
 }
 
 Cib.prototype.loadDefinitions = function () {
@@ -235,9 +214,6 @@ Cib.prototype.loadDefinitions = function () {
 
   this.definitionsRef.limitToLast(3).on('child_added', setDefinitions);
 }
-
-
-// $(document).find('.definition-list > ul').append(this.createDefinitionListItem(val));
 
 Cib.prototype.displayDefinition = function (key, val) {
   this.createDefinitionListItem(val);
@@ -271,27 +247,6 @@ Cib.prototype.saveDefinition = function () {
     });
   }
 }
-
-Cib.prototype.displayUsername = function (key, name) {
-  document.querySelector('#username').value = name;
-}
-
-Cib.prototype.saveUsername = function (e) {
-  e.preventDefault();
-
-  if (this.usernameInput.value) {
-    var currentUsername = this.usernameInput.value;
-
-    this.usersRef.push({
-      name: currentUsername
-    }).then(function () {
-      //Cib.resetMaterialTextfield(this.usernameInput);
-      this.toggleButton(this.usernameInput, this.usernameSubmitButton);
-    }.bind(this)).catch(function (error) {
-      console.error('Error saving username to firebase', error);
-    });
-  }
-};
 
 /**
  * https://stackoverflow.com/questions/28262803/firebase-retrieve-data-by-using-orderbykey-and-equalto
@@ -384,7 +339,7 @@ Cib.prototype.createTopicCard = function (val) {
   var card = `<div class="list-group-item list-group-item-action flex-column mb-1 p-2 align-items-start active">
                 <div class="d-flex w-100 justify-content-left" style="margin-right:0">
                     <h5 class="px-0 mb-1 mr-4 topic-name">${val.topic}</h5>
-                    <small class="mr-0 topic-time-searched"  >${timeSearched}</small>
+                    <small class="mr-0 topic-time-searched"  >${timeSearched} by ${val.username}</small>
                 </div>
                 <small>View </small>
                 <button type="button" class="btn btn-primary modal-btn" data-toggle="modal" 
@@ -503,7 +458,8 @@ $(document).on('click', '#usernameSubmit', function (e) {
   $(document).find(".username-title").text(username);
 
   var searchCount;
-  var found = Cib.checkIfExistingUser(username);
+  //var found = Cib.checkIfExistingUser(username);
+  var found = true;
 
   if (found) {
     searchCount = Cib.searchCountForUser(username);
@@ -645,7 +601,6 @@ Cib.prototype.saveFinalDefinition = function (finalDefinitionWords) {
   });
 }
 
-
 Cib.resetMaterialTextfield = function (element) {
   element.value = '';
   element.parentNode.MaterialTextfield.boundUpdateClassesHandler();
@@ -764,9 +719,5 @@ window.onload = function () {
   window.Cib = new Cib();
   sessionStorage.clear();
   Cib.loadUsername();
-  //Cib.checkIfExistingUser(Cib.usernameInput.value);
-  //Cib.loadTopics();
-  //Cib.loadDefinitions();
-  //Cib.getMostRecentDefinition();
   Cib.loadFinalDefinitions();
 }
