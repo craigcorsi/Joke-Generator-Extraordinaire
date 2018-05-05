@@ -89,6 +89,42 @@ Cib.prototype.saveUsername = function (e) {
 };
 
 /**
+ * https://stackoverflow.com/questions/28262803/firebase-retrieve-data-by-using-orderbykey-and-equalto
+ */
+Cib.prototype.checkIfExistingUser = function (username) {
+  var found;
+  this.usersRef.orderByChild("name")
+    .equalTo(username)
+    .once('child_added', function (snap) {
+      if (snap.val().name) found = true;
+      else found = false;
+    }.bind(this));
+  console.log("found: " + found);
+  return found;
+}
+
+Cib.prototype.searchCountForUser = function (username) {
+  var searchCount;
+  this.finalDefinitionsRef.orderByChild('name')
+    .equalTo(username)
+    .once('child_added', function (snap) {
+      var finalDefinitions = Array.from(snap.val());
+      searchCount = finalDefinitions.length;
+    }.bind(this));
+  return searchCount;
+}
+
+Cib.prototype.getFinalDefinitionsForUser = function (username) {
+  var finalDefinitions;
+  this.finalDefinitionsRef.orderByChild('name')
+    .equalTo(username)
+    .once('child_added', function (snap) {
+      finalDefinitions = Array.from(snap.val());
+    }.bind(this));
+  return finalDefinitions;
+}
+
+/**
  * topic related
  * @param {*} val 
  */
@@ -112,7 +148,7 @@ Cib.prototype.displayTopic = function (key, val) {
   // console.log(key, val.topic, val.searchedTime);
   // var topicName = val.topic;
   //document.querySelector('#topic-list').append(this.Topic_TEMPLATE);
-  $(document).find('#topic-list').append(this.createTopicCard(val));
+  //$(document).find('#topic-list').append(this.createTopicCard(val));
 }
 
 Cib.prototype.saveTopic = function (e) {
@@ -153,9 +189,9 @@ Cib.prototype.createTopicCard = function (val) {
                   </div>
                   <small>View </small>
                   <button type="button" class="btn btn-primary modal-btn" data-toggle="modal" 
-                          data-topic='${val.topic}' data-username='${val.username}' data-searchedTime='${timeSearched}' 
+                          data-topic='${val.topic}' data-username='${val.username}' data-searchedtime='${timeSearched}' 
                           data-definitions = '${val.definitions}' 
-                          data-finalDefinitions = '${val.finalDefinitions}' 
+                          data-finaldefinitions = '${val.finalDefinitions}' 
                           data-target=".def-final"> Final definition
                   </button>
                   </div>`;
@@ -182,7 +218,7 @@ Cib.prototype.createDefinitionListItem = function (val) {
     definitions: strDefinitions
   }
   // do not create topic card at this point. Final Definition process include topic card generation
-  $(document).find('#topic-list').append(this.createTopicCard(data));
+  //$(document).find('#topic-list').append(this.createTopicCard(data));
 }
 
 Cib.prototype.loadDefinitions = function () {
@@ -231,59 +267,260 @@ Cib.prototype.saveDefinition = function () {
   }
 }
 
-// Cib.prototype.saveDefinitionsToSessionStorage = function(username, topic, definitions) {
-//   sessionStorage.clear();
-//   sessionStorage.setItem('username', )
+Cib.prototype.displayUsername = function (key, name) {
+  document.querySelector('#username').value = name;
+}
+
+Cib.prototype.saveUsername = function (e) {
+  e.preventDefault();
+
+  if (this.usernameInput.value) {
+    var currentUsername = this.usernameInput.value;
+
+    this.usersRef.push({
+      name: currentUsername
+    }).then(function () {
+      //Cib.resetMaterialTextfield(this.usernameInput);
+      this.toggleButton(this.usernameInput, this.usernameSubmitButton);
+    }.bind(this)).catch(function (error) {
+      console.error('Error saving username to firebase', error);
+    });
+  }
+};
+
+/**
+ * https://stackoverflow.com/questions/28262803/firebase-retrieve-data-by-using-orderbykey-and-equalto
+ */
+// Cib.prototype.checkIfExistingUser = function (username) {
+//   var found;
+//   this.usersRef.orderByChild("username")
+//     .equalTo(username)
+//     .once('child_added', function (snap) {
+//       if (snap.val().username) found = true;
+//       else found = false;
+//     }.bind(this));
+//   return found;
 // }
+
+// Cib.prototype.searchCountForUser = function (username) {
+//   var searchCount;
+//   this.finalDefinitionsRef.orderByChild('username')
+//     .equalTo(username)
+//     .once('child_added', function (snap) {
+//       var finalDefinitions = Array.from(snap.val());
+//       searchCount = finalDefinitions.length;
+//     }.bind(this));
+//   return searchCount;
+// }
+
+// Cib.prototype.getFinalDefinitionsForUser = function (username) {
+//   var finalDefinitions;
+//   this.finalDefinitionsRef.orderByChild('username')
+//     .equalTo(username)
+//     .once('child_added', function (snap) {
+//       finalDefinitions = Array.from(snap.val());
+//     }.bind(this));
+//   return finalDefinitions;
+// }
+
+/**
+ * topic related
+ * @param {*} val 
+ */
+Cib.prototype.loadTopics = function () {
+  var setTopics = function (data) {
+    var val = data.val();
+    console.log(data, val);
+    this.displayTopic(data.key, val)
+  }.bind(this);
+
+  this.topicsRef.limitToLast(3).on('child_added', setTopics);
+}
+
+Cib.prototype.displayTopic = function (key, val) {
+
+  // console.log(key, val.topic, val.searchedTime);
+  // var topicName = val.topic;
+  //document.querySelector('#topic-list').append(this.Topic_TEMPLATE);
+  //$(document).find('#topic-list').append(this.createTopicCard(val));
+}
+
+Cib.prototype.saveTopic = function (e) {
+  //e.preventDefault();
+
+  if (this.topicInput.value) {
+    console.log(this.topicInput.value);
+    var topicInputValue = this.topicInput.value;
+    var usernameInputValue = this.usernameInput.value;
+    console.log(firebase.database.ServerValue.TIMESTAMP);
+
+    this.topicsRef.push({
+      username: usernameInputValue,
+      topic: topicInputValue,
+      searchedTime: firebase.database.ServerValue.TIMESTAMP
+    }).then(function () {
+      //Cib.resetMaterialTextfield(this.topicInput);
+      this.toggleButton(this.topicInput, this.topicSubmitButton);
+    }.bind(this)).catch(function (error) {
+      console.error('Error saving username to firebase', error);
+    });
+  }
+}
+
+Cib.prototype.createTopicCard = function (val) {
+  var timeSearched;
+  if (!val.hasOwnProperty('searchedTime')) {
+    timeSearched = 'not known';
+  } else {
+    console.log(val.searchedTime);
+    timeSearched = moment.unix(val.searchedTime / 1000).format("LLL");
+  }
+
+  var card = `<div class="list-group-item list-group-item-action flex-column mb-1 align-items-start active">
+                <div class="d-flex w-100 justify-content-left">
+                    <h5 class="mb-1 mr-4 topic-name">${val.topic}</h5>
+                    <small class="align-right topic-time-searched" >${timeSearched}</small>
+                </div>
+                <small>View </small>
+                <button type="button" class="btn btn-primary modal-btn" data-toggle="modal" 
+                        data-topic='${val.topic}' data-username='${val.username}' data-searchedTime='${timeSearched}' 
+                        data-definitions = '${val.definitions}' 
+                        data-finalDefinitions = '${val.finalDefinitions}' 
+                        data-target=".def-final"> Final definition
+                </button>
+                </div>`;
+  return card;
+}
+
+/**
+ * definition related
+ */
+//https://codepen.io/jkrehm/pen/OybdrW ****************************************
+Cib.prototype.createDefinitionListItem = function (val) {
+  var topic, searchedTime, definitions, definitionListItem;
+  topic = val.hasOwnProperty('topic') ? val.topic : 'Not known';
+  searchedTime = val.hasOwnProperty('searchedTime') ? val.searchedTime : 0;
+  //definitions = val.hasOwnProperty('definitions') ? Array.from(val.definitions[0]) : 'Not known';
+  definitions = val.hasOwnProperty('definitions') ? val.definitions : 'Not known';
+
+  console.log(definitions);
+  console.log(JSON.stringify(definitions));
+
+  var data = {
+    username: this.usernameInput.value,
+    topic: topic,
+    searchedTime: searchedTime,
+    definitions: JSON.stringify(definitions)
+  }
+  // do not create topic card at this point. Final Definition process include topic card generation
+  //$(document).find('#topic-list').append(this.createTopicCard(data));
+}
+
+Cib.prototype.loadDefinitions = function () {
+  var setDefinitions = function (data) {
+    var val = data.val();
+    console.log(data, val);
+    this.displayDefinition(data.key, val)
+  }.bind(this);
+
+  this.definitionsRef.limitToLast(3).on('child_added', setDefinitions);
+}
+
+Cib.prototype.displayDefinition = function (key, val) {
+  this.createDefinitionListItem(val);
+
+  /**
+   * we do not generate modal definition list at this point. The final definition step will generate both definition
+   * and final definition list in modal
+   */
+  // $(document).find('.definition-list > ul').append(this.createDefinitionListItem(val));
+}
+
+Cib.prototype.saveDefinition = function () {
+
+  //e.preventDefault(); // this statement will be needed for normal situation, but this statement is already called in app.js for click event
+  if (this.definitionsChoice) {
+    var definitionsInputValue = this.getDefinitionsChoice();
+    var topicInputValue = this.topicInput.value;
+    var usernameInputValue = this.usernameInput.value;
+    console.log(definitionsInputValue);
+
+    /**
+     * need to remember definitions when final definitions step starts
+     * temporary save definitions to session storage
+     */
+    this.setDefinitionsToSessionStorage(usernameInputValue, topicInputValue, definitionsInputValue);
+
+    this.definitionsRef.push({
+      username: usernameInputValue,
+      topic: topicInputValue,
+      definitions: definitionsInputValue,
+      searchedTime: firebase.database.ServerValue.TIMESTAMP
+    }).then(function () {
+      //Cib.resetMaterialTextfield(this.definitionsInput);
+      //this.toggleButton();
+      this.toggleButton(this.topicInput, this.topicSubmitButton);
+
+    }.bind(this)).catch(function (error) {
+      console.error('Error saving username to firebase', error);
+    });
+  }
+}
+
+/**
+ * save definitions to sessionStorage for use in final definitions step 
+ * @param {*} username 
+ * @param {*} topic 
+ * @param {*} definitions 
+ */
+Cib.prototype.setDefinitionsToSessionStorage = function (username, topic, definitions) {
+  sessionStorage.clear();
+  sessionStorage.setItem('username', username);
+  sessionStorage.setItem('topic', topic);
+  sessionStorage.setItem('definitions', JSON.stringify(definitions));
+}
+
+Cib.prototype.getDefinitionsFromSessionStorage = function () {
+  return {
+    username: sessionStorage.getItem('username'),
+    topic: sessionStorage.getItem('topic'),
+    definitions: JSON.parse(sessionStorage.getItem('definitions')),
+    //searchedTime: sessionStorage.getItem('searchedTime')
+  }
+}
+
 /**
  * modal thing
  * load modal content on click the button "#modal-btn"
  */
-// $(".def-final").on('show.bs.modal', function(e) {
-//   var targetTopicCard = $(e.relatedTarget);
-//   var username = targetTopicCard.data('username');
-//   var topic = targetTopicCard.data('topic');
-//   var searchedTime = targetTopicCard.data('searchedTime');
-//   var definitions = JSON.parse(targetTopicCard.data('definitions'));
-//   //var definitions = targetTopicCard.data('definitions');
-//   console.log(definitions);
+$(document).on('click', '#usernameSubmit', function (e) {
+  var username = Cib.usernameInput.value;
+  $(document).find(".username-title").text(username);
 
-//   // this here is the modal popup
-//   $(this).find('.topic-title').text(topic);
-//   var definitionListItem;
-//   var $definitionList = $(this).find('.modal-body.definition-list > ul').empty();
-//   definitions.forEach(function(definition) {
-//       definitionListItem = '';
-//       definitionListItem = `<li>${definition}</li>`;
-//     $definitionList.append(definitionListItem);
-//   });
-// })
+  var searchCount;
+  var found = Cib.checkIfExistingUser(username);
 
-// $(document).on('show.bs.modal', '.def-final', function(e) {
-//   var targetTopicCard = $(e.relatedTarget);
-//   var username = targetTopicCard.data('username');
-//   var topic = targetTopicCard.data('topic');
-//   var searchedTime = targetTopicCard.data('searchedTime');
-//   // var definitions = JSON.parse( targetTopicCard.data('definitions'));
-//   var definitions = targetTopicCard.data('definitions');
-
-//   // this here is the modal popup
-//   $(this).find('.topic-title').text(topic);
-//   var definitionListItem;
-//   var $definitionList = $(this).find('.modal-body.definition-list > ul').empty();
-//   definitions.forEach(function(definition) {
-//       definitionListItem = '';
-//       definitionListItem = `<li>${definition}</li>`;
-//     $definitionList.append(definitionListItem);
-//   });
-// })
+  if (found) {
+    searchCount = Cib.searchCountForUser(username);
+    if (searchCount == 1) {
+      $(document).find(".username-exists")
+        .html(`<strong>You are one of us!</strong><p>Your ${searchCount} search history is shown below.</p>`);
+    } else if (searchCount > 1) {
+      $(document).find(".username-exists")
+        .html(`<strong>You are one of us!</strong><p>Your ${searchCount} or 3-most-recent search histories are shown below.</p>`);
+    }
+  } else {
+    $(document).find(".username-exists")
+      .html("<strong>No username was found.</strong><p>But we will remember you,  you become one of us!</p>");
+  }
+})
 
 $(document).on('click', '.modal-btn', function (e) {
   $(".topic-title").text($(this).attr('data-topic'));
   var definitions = $(this).attr('data-definitions').replace('[', '').replace(']', '');
   var arrDefinitions = [];
   arrDefinitions.push(definitions.split(','));
-  var finalDefinitions = $(this).attr('data-finalDefinitions').replace('[', '').replace(']', '');
+  var finalDefinitions = $(this).attr('data-finaldefinitions').replace('[', '').replace(']', '');
   var arrFinalDefinitions = [];
   arrFinalDefinitions.push(finalDefinitions.split(','));
 
@@ -313,31 +550,47 @@ $(document).on('click', '.modal-btn', function (e) {
  * final definition related
  */
 Cib.prototype.createFinalDefinitionListItem = function (val) {
-  var topic, searchedTime, definitions, definitionListItem, username;
-  username = val.hasOwnProperty('username') ? val.username : 'Not known';
-  topic = val.hasOwnProperty('topic') ? val.topic : 'Not known';
+  var username,finalDefinitions;
+  var topic, searchedTime;
+  var definitions;
+  // get values from sessionStorage
+  if (this.getDefinitionsFromSessionStorage) {
+    var items = this.getDefinitionsFromSessionStorage();
+
+    username = items.username;
+    topic = items.topic;
+    definitions = items.definitions;
+    finalDefinitions = val.finalDefinitions;
+  } else {
+
+    definitions = val.hasOwnProperty('definitions') ? val.definitions : 'Not known';
+    finalDefinitions = val.hasOwnProperty('finalDefinitions') ? val.finalDefinitions : 'Not known';
+  }
   searchedTime = val.hasOwnProperty('searchedTime') ? val.searchedTime : 0;
-  // definitions = val.hasOwnProperty('definitions') ? Array.from(val.definitions[0]) : 'Not known';
-  // finalDefinitions = val.hasOwnProperty('finalDefinitions') ? Array.from(val.finalDefinitions[0]) : 'Not known';
-
-  definitions = val.hasOwnProperty('definitions') ? val.definitions[0] : 'Not known';
-  finalDefinitions = val.hasOwnProperty('finalDefinitions') ? val.finalDefinitions : 'Not known';
-
   console.log("definitions for createTopicCard", definitions);
-  // console.log(JSON.stringify(definitions));
-  // console.log(val.finalDefinitions[0])
   console.log("finalDefinitions for createTopicCard", finalDefinitions);
-  // console.log(JSON.stringify(val.finalDefinitions[0]));
   console.log(JSON.stringify(finalDefinitions));
 
   var data = {
     username: username,
     topic: topic,
-    searchedTime: searchedTime,
     definitions: JSON.stringify(definitions),
-    finalDefinitions: JSON.stringify(finalDefinitions)
+    finalDefinitions: JSON.stringify(finalDefinitions),
+    searchedTime: searchedTime
   };
   $(document).find('#topic-list').append(this.createTopicCard(data));
+}
+
+Cib.prototype.getFinalDefinitionsForUsername = function (username) {
+  var setFinalDefinitions = function (data) {
+    var val = data.val();
+    console.log(data, val);
+    this.displayFinalDefinition(data.key, val)
+  }.bind(this);
+
+  this.finalDefinitionsRef.orderByChild('username')
+    .equalTo(username)
+    .once('child_added', setFinalDefinitions);
 }
 
 Cib.prototype.loadFinalDefinitions = function () {
@@ -352,46 +605,27 @@ Cib.prototype.loadFinalDefinitions = function () {
 
 Cib.prototype.displayFinalDefinition = function (key, val) {
   this.createFinalDefinitionListItem(val);
-
-  // $(document).find('.definition-list > ul').append(this.createDefinitionListItem(val));
-}
-
-
-
-//var definitionsInputValue = this.getDefinitionsChoice();
-
-Cib.prototype.displayFinalDefinition = function (key, val) {
-  this.createFinalDefinitionListItem(val);
-
   // $(document).find('.definition-list > ul').append(this.createDefinitionListItem(val));
 }
 
 Cib.prototype.saveFinalDefinition = function (finalDefinitionWords) {
   if (!finalDefinitionWords) return;
 
-  //e.preventDefault();
-  var strDefinitions;
-  var topicName;
-  var userName;
-  // this.definitionsRef.limitToLast(1).once('child_added', function(snap) {
-  //   var val = snap.val();
-  //   topicNaem = val.topic;
-  //   userName = val.username;
-  //   var definitions = val.hasOwnProperty('definitions') ? Array.from(val.definitions[0]) : 'Not known';
-  //   strDefinitions = JSON.stringify(definitions);
-  // });
+  // get values from sessionStorage
+  var items = this.getDefinitionsFromSessionStorage();
 
+  console.log(items.definitions);
+  //console.log(JSON.parse(items.definitions));
 
-  var finalDefinitionsInpoutValue = finalDefinitionWords;
-  var definitionsInputValue = strDefinitions;
-  var topicInputValue = this.topicInput.value;
-  var usernameInputValue = this.usernameInput.value;
+  var definitionsInputValue =items.definitions;
+  var topicInputValue = items.topic;
+  var usernameInputValue = items.username;
 
   this.finalDefinitionsRef.push({
 
     username: usernameInputValue,
     topic: topicInputValue,
-    //definitions: definitionsInputValue,
+    definitions: definitionsInputValue,
     finalDefinitions: finalDefinitionWords,
     searchedTime: firebase.database.ServerValue.TIMESTAMP
   }).then(function () {
@@ -523,6 +757,7 @@ Cib.prototype.displayFinalChoices = function (selector, finalChoices) {
 window.onload = function () {
   window.Cib = new Cib();
   Cib.loadUsername();
+  //Cib.checkIfExistingUser(Cib.usernameInput.value);
   //Cib.loadTopics();
   //Cib.loadDefinitions();
   //Cib.getMostRecentDefinition();
