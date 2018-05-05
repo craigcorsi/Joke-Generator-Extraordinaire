@@ -44,7 +44,12 @@ function Cib() {
                         </button>
                         </div>`;
 
-  this.mostRecentDefinition = { topic: '', username: '', definitions: [], timeSearched: 0 };
+  this.mostRecentDefinition = {
+    topic: '',
+    username: '',
+    definitions: [],
+    timeSearched: 0
+  };
 
 
   this.initFirebase();
@@ -148,7 +153,7 @@ Cib.prototype.displayTopic = function (key, val) {
   // console.log(key, val.topic, val.searchedTime);
   // var topicName = val.topic;
   //document.querySelector('#topic-list').append(this.Topic_TEMPLATE);
-  //$(document).find('#topic-list').append(this.createTopicCard(val));
+  $(document).find('#topic-list').append(this.createTopicCard(val));
 }
 
 Cib.prototype.saveTopic = function (e) {
@@ -179,13 +184,13 @@ Cib.prototype.createTopicCard = function (val) {
     timeSearched = 'not known';
   } else {
     console.log(val.searchedTime);
-    timeSearched = moment.unix(val.searchedTime / 1000).format("LLL");
+    timeSearched = moment.unix(val.searchedTime / 1000).format("L");
   }
 
   var card = `<div class="list-group-item list-group-item-action flex-column mb-1 align-items-start active">
                   <div class="d-flex w-100 justify-content-left">
-                      <h5 class="mb-1 mr-4 topic-name">${val.topic}</h5>
-                      <small class="align-right topic-time-searched" >${timeSearched}</small>
+                      <h5 class="mb-1  topic-name">${val.topic}</h5>
+                      <small class="align-right py-2 topic-time-searched" >${timeSearched}</small>
                   </div>
                   <small>View </small>
                   <button type="button" class="btn btn-primary modal-btn" data-toggle="modal" 
@@ -218,7 +223,7 @@ Cib.prototype.createDefinitionListItem = function (val) {
     definitions: strDefinitions
   }
   // do not create topic card at this point. Final Definition process include topic card generation
-  //$(document).find('#topic-list').append(this.createTopicCard(data));
+  $(document).find('#topic-list').append(this.createTopicCard(data));
 }
 
 Cib.prototype.loadDefinitions = function () {
@@ -342,7 +347,7 @@ Cib.prototype.displayTopic = function (key, val) {
   // console.log(key, val.topic, val.searchedTime);
   // var topicName = val.topic;
   //document.querySelector('#topic-list').append(this.Topic_TEMPLATE);
-  //$(document).find('#topic-list').append(this.createTopicCard(val));
+  $(document).find('#topic-list').append(this.createTopicCard(val));
 }
 
 Cib.prototype.saveTopic = function (e) {
@@ -373,13 +378,13 @@ Cib.prototype.createTopicCard = function (val) {
     timeSearched = 'not known';
   } else {
     console.log(val.searchedTime);
-    timeSearched = moment.unix(val.searchedTime / 1000).format("LLL");
+    timeSearched = moment.unix(val.searchedTime / 1000).format("L");
   }
 
-  var card = `<div class="list-group-item list-group-item-action flex-column mb-1 align-items-start active">
-                <div class="d-flex w-100 justify-content-left">
-                    <h5 class="mb-1 mr-4 topic-name">${val.topic}</h5>
-                    <small class="align-right topic-time-searched" >${timeSearched}</small>
+  var card = `<div class="list-group-item list-group-item-action flex-column mb-1 p-2 align-items-start active">
+                <div class="d-flex w-100 justify-content-left" style="margin-right:0">
+                    <h5 class="px-0 mb-1 mr-4 topic-name">${val.topic}</h5>
+                    <small class="mr-0 topic-time-searched"  >${timeSearched}</small>
                 </div>
                 <small>View </small>
                 <button type="button" class="btn btn-primary modal-btn" data-toggle="modal" 
@@ -550,11 +555,11 @@ $(document).on('click', '.modal-btn', function (e) {
  * final definition related
  */
 Cib.prototype.createFinalDefinitionListItem = function (val) {
-  var username,finalDefinitions;
+  var username, finalDefinitions;
   var topic, searchedTime;
   var definitions;
   // get values from sessionStorage
-  if (this.getDefinitionsFromSessionStorage) {
+  if (this.getDefinitionsFromSessionStorage.topic) {
     var items = this.getDefinitionsFromSessionStorage();
 
     username = items.username;
@@ -562,7 +567,8 @@ Cib.prototype.createFinalDefinitionListItem = function (val) {
     definitions = items.definitions;
     finalDefinitions = val.finalDefinitions;
   } else {
-
+    username = val.hasOwnProperty('username') ? val.username : 'Not known';
+    topic = val.hasOwnProperty('topic') ? val.topic : 'Not known';
     definitions = val.hasOwnProperty('definitions') ? val.definitions : 'Not known';
     finalDefinitions = val.hasOwnProperty('finalDefinitions') ? val.finalDefinitions : 'Not known';
   }
@@ -617,7 +623,7 @@ Cib.prototype.saveFinalDefinition = function (finalDefinitionWords) {
   console.log(items.definitions);
   //console.log(JSON.parse(items.definitions));
 
-  var definitionsInputValue =items.definitions;
+  var definitionsInputValue = items.definitions;
   var topicInputValue = items.topic;
   var usernameInputValue = items.username;
 
@@ -756,6 +762,7 @@ Cib.prototype.displayFinalChoices = function (selector, finalChoices) {
 // start app
 window.onload = function () {
   window.Cib = new Cib();
+  sessionStorage.clear();
   Cib.loadUsername();
   //Cib.checkIfExistingUser(Cib.usernameInput.value);
   //Cib.loadTopics();
@@ -763,4 +770,3 @@ window.onload = function () {
   //Cib.getMostRecentDefinition();
   Cib.loadFinalDefinitions();
 }
-
