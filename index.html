@@ -30,7 +30,7 @@
                             aria-expanded="false">
                             Resources
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu grey" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="http://api.funtranslations.com" target="_blank">Fun Translator APIs</a>
                             <a class="dropdown-item" href="https://developers.giphy.com/" target="_blank">Gifs from Giphy API</a>
                             <a class="dropdown-item" href="http://rumandmonkey.com/widgets/toys/namegen#.WuSp2IjwZPY" target="_blank">Silly Name Generators</a>
@@ -42,7 +42,7 @@
                             aria-expanded="false">
                             About
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu grey" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="https://www.twinword.com/api/word-associations.php" target="_blank">Word Associations API</a>
                             <a class="dropdown-item" href="https://www.wordsapi.com/" target="_blank">Words API</a>
                             <a class="dropdown-item" href="https://firebase.google.com/docs/" target="_blank">Firebase</a>
@@ -62,44 +62,6 @@
     </div>
 
     <div class="row">
-        <!-- side panel for search history -->
-        <div class="col col-md-3 bg-dark" id="saved-items">
-            <!-- commented out name input and 'Previous Search' button-->
-            <form class="form-inline mt-3 mb-3" id="usernameForm">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">name</span>
-
-                    </div>
-                    <input type="text" class="form-control" id="username" placeholder="enter for view/track" aria-label="view search history"
-                        aria-describedby="basic-addon1">
-                </div>
-                <button type="submit" class="btn btn-primary mt-2" id='usernameSubmit'>Add user</button>
-            </form>
-            <h6 class="mb-1 ml-2 text-white">Topics Searched</h6>
-
-            <div class="list-group" id="topic-list">
-            </div>
-            <!-- modal-->
-            <div class="modal fade def-final" tabindex="-1" role="dialog" aria-labelledby="defFinaleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title topic-title">Topic name</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body definition-list"><h6 style="color:black">Definitions</h6><ul></ul></div>
-                        <div class="modal-body final-definition-list"><h6 style="color:black">Final definitions</h6><ul></ul></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- main search area -->
         <div class="col col-md-9">
@@ -110,7 +72,8 @@
                 <form class="needs-validation" id="topic-form" novalidate>
                     <div class="row" id="input-search-terms-here">
                         <div class="container center_div col-md-12 mb-3">
-                            <label for="firstName" id="search-instructions">Input the subject of your joke, (e.g. "kale appreciation day", "group ski lesson", "tennis for ants")</label>
+                            <label for="firstName" id="search-instructions">Input the subject of your joke, (e.g. "kale appreciation day", "group ski lesson", "tennis for
+                                ants")</label>
                             <input type="text" class="form-control" id="first-search-term" placeholder="" value="" required>
                             <div class="invalid-feedback">
                                 Validation msg.
@@ -172,6 +135,52 @@
                 <!--/.Bootstrap Copyright-->
             </footer>
         </div>
+
+        <!-- side panel for search history -->
+        <div class="col col-md-3 bg-dark" id="saved-items">
+            <!-- commented out name input and 'Previous Search' button-->
+            <form class="form-inline mt-3 mb-3" id="usernameForm">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">name</span>
+
+                    </div>
+                    <input type="text" class="form-control" id="username" placeholder="enter for view/track" aria-label="view search history"
+                        aria-describedby="basic-addon1">
+                </div>
+                <button type="submit" class="btn btn-primary mt-2" id='usernameSubmit'>Add user</button>
+            </form>
+            <h6 class="mb-1 ml-2 text-white">Topics Searched</h6>
+
+            <div class="list-group" id="topic-list">
+            </div>
+            <!-- modal-->
+            <div class="modal fade def-final" tabindex="-1" role="dialog" aria-labelledby="defFinaleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title topic-title">Topic name</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body definition-list">
+                            <h6 style="color:black">Definitions</h6>
+                            <ul></ul>
+                        </div>
+                        <div class="modal-body final-definition-list">
+                            <h6 style="color:black">Final definitions</h6>
+                            <ul></ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!--/.Footer-->
     </div>
     <!-- Bootstrap core JavaScript
