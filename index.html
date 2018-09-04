@@ -11,7 +11,6 @@
     <title>Joke Generator</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
 
@@ -31,7 +30,7 @@
                             aria-expanded="false">
                             Resources
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu grey" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="http://api.funtranslations.com" target="_blank">Fun Translator APIs</a>
                             <a class="dropdown-item" href="https://developers.giphy.com/" target="_blank">Gifs from Giphy API</a>
                             <a class="dropdown-item" href="http://rumandmonkey.com/widgets/toys/namegen#.WuSp2IjwZPY" target="_blank">Silly Name Generators</a>
@@ -43,7 +42,7 @@
                             aria-expanded="false">
                             About
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu grey" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="https://www.twinword.com/api/word-associations.php" target="_blank">Word Associations API</a>
                             <a class="dropdown-item" href="https://www.wordsapi.com/" target="_blank">Words API</a>
                             <a class="dropdown-item" href="https://firebase.google.com/docs/" target="_blank">Firebase</a>
@@ -63,59 +62,18 @@
     </div>
 
     <div class="row">
-        <!-- side panel for search history -->
-        <div class="col col-md-3 bg-dark">
-            <form class="form-inline mt-3 mb-3" id="usernameForm">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">name</span>
-
-                    </div>
-                    <input type="text" class="form-control" id="username" placeholder="enter for view/track" aria-label="view search history"
-                        aria-describedby="basic-addon1">
-                </div>
-                <button type="submit" class="btn btn-primary mt-2" id='usernameSubmit'>Previous search</button>
-            </form>
-            <h6 class="mb-1 ml-2 text-white">Topics Searched</h6>
-
-            <div class="list-group" id="topic-list">
-            </div>
-            <!-- modal-->
-            <div class="modal fade def-final" tabindex="-1" role="dialog" aria-labelledby="defFinaleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title topic-title">Topic name</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body definition-list"><ul></ul>  
-                        </div>
-                        <div class="modal-body final-definition-list"><ul></ul>
-                            </div>
-
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- main search area -->
         <div class="col col-md-9">
 
-            <!-------------------------------->
+            <!--       enter your search terms here     -->
             <div class="container center_div col-md-12 order-md-1 text-center">
-                <h4 class="mb-3">User Input</h4>
+                <!-- removed h4 tag-->
                 <form class="needs-validation" id="topic-form" novalidate>
-                    <div class="row">
+                    <div class="row" id="input-search-terms-here">
                         <div class="container center_div col-md-12 mb-3">
-                            <label for="firstName">Type a phrase describing the subject of your joke, (e.g. "kale appreciation day")</label>
+                            <label for="firstName" id="search-instructions">Input the subject of your joke, (e.g. "kale appreciation day", "group ski lesson", "tennis for
+                                ants")</label>
                             <input type="text" class="form-control" id="first-search-term" placeholder="" value="" required>
                             <div class="invalid-feedback">
                                 Validation msg.
@@ -125,7 +83,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div id="search-results-here">
+                        <div class="col-sm-12" id="search-results-here">
                         </div>
                     </div>
                 </form>
@@ -139,15 +97,11 @@
                     </div>
                 </div>
                 <!--Social buttons-->
-                <div class="text-center">
+                <!-- <div class="text-center">
                     <ul class="list-unstyled list-inline">
                         <li class="list-inline-item">
                             <a href="https://youtube.com/?lang=en" target="_blank" class="btn-floating btn-sm btn-tw mx-1">
                                 <i class="fa fa-youtube"> </i>
-<<<<<<< HEAD
-
-=======
->>>>>>> with_firebase
                             </a>
                         </li>
                         <li class="list-inline-item">
@@ -171,26 +125,73 @@
                             </a>
                         </li>
                     </ul>
-                </div>
+                </div> -->
                 <!--/.Social buttons-->
                 <!--Bootstrap Copyright-->
                 <div class="footer-copyright py-3 text-center">
-                    © 2018 Copyright:
+                    © 2018 Team GCS. Built with:
                     <a href="https://mdbootstrap.com/material-design-for-bootstrap/" target="_blank"> MDBootstrap.com </a>
                 </div>
                 <!--/.Bootstrap Copyright-->
             </footer>
         </div>
+
+        <!-- side panel for search history -->
+        <div class="col col-md-3 bg-dark" id="saved-items">
+            <!-- commented out name input and 'Previous Search' button-->
+            <form class="form-inline mt-3 mb-3" id="usernameForm">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">name</span>
+
+                    </div>
+                    <input type="text" class="form-control" id="username" placeholder="enter for view/track" aria-label="view search history"
+                        aria-describedby="basic-addon1">
+                </div>
+                <button type="submit" class="btn btn-primary mt-2" id='usernameSubmit'>Add user</button>
+            </form>
+            <h6 class="mb-1 ml-2 text-white">Topics Searched</h6>
+
+            <div class="list-group" id="topic-list">
+            </div>
+            <!-- modal-->
+            <div class="modal fade def-final" tabindex="-1" role="dialog" aria-labelledby="defFinaleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title topic-title">Topic name</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body definition-list">
+                            <h6 style="color:black">Definitions</h6>
+                            <ul></ul>
+                        </div>
+                        <div class="modal-body final-definition-list">
+                            <h6 style="color:black">Final definitions</h6>
+                            <ul></ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!--/.Footer-->
     </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+    <!-- <script>
         window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')
-    </script>
+    </script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
@@ -198,7 +199,11 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+
+    <!-- database -->
     <script src="assets/js/words.js"></script>
+
+    <!-- api implementation -->
     <script src="assets/js/app.js"></script>
 
 </body>

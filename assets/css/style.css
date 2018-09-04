@@ -130,5 +130,19 @@ img {
 }
 
 #phrase-to-search {
-  width: 95%;
+    width: 90%;
+    margin: 0 auto;
+}
+
+#saved-items {
+    padding-right: 30px;
+    padding-bottom: 10px;
+}
+
+.grey {
+    background-color: grey;
+}
+
+.footer-copyright {
+    color: pink;
 }
